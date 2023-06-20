@@ -1,5 +1,5 @@
 public enum e_Spin_Direction
 {
-    Clockwise,
-    CounterClockwise
+    CounterClockwise = -1,
+    Clockwise = 1
 }
