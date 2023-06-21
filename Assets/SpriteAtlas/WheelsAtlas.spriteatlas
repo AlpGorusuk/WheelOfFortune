@@ -6,7 +6,7 @@ SpriteAtlas:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Tier1
+  m_Name: WheelsAtlas
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -15,7 +15,7 @@ SpriteAtlas:
       compressionQuality: 50
       maxTextureSize: 2048
       textureCompression: 0
-      filterMode: 0
+      filterMode: 1
       generateMipMaps: 0
       readable: 0
       crunchedCompression: 0
@@ -38,35 +38,31 @@ SpriteAtlas:
       padding: 2
       blockOffset: 1
       allowAlphaSplitting: 0
-      enableRotation: 0
-      enableTightPacking: 0
+      enableRotation: 1
+      enableTightPacking: 1
       enableAlphaDilation: 1
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
-    - {fileID: 102900000, guid: eac963a260cb6b24b86f1d68fe6edd27, type: 3}
+    - {fileID: 102900000, guid: fd46a42f9062ea545bb7cbaf76e1e448, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: 21300000, guid: 1645ca6317ec73b45a623be1dee24c94, type: 3}
-  - {fileID: 21300000, guid: 955fbc15065575d4ab3d10ec272aba6a, type: 3}
-  - {fileID: 21300000, guid: 4685d667e1bc35545b23be05bef9fc5c, type: 3}
-  - {fileID: 21300000, guid: e3692f885c9521c48bec2268cb46a35a, type: 3}
-  - {fileID: 21300000, guid: e8d085191787f724d860ebd0eb776bad, type: 3}
-  - {fileID: 21300000, guid: 5a9aa0b9f007c074c91584b491a492c8, type: 3}
-  - {fileID: 21300000, guid: e0bf6b7b3749cb74288ff4446492d3e2, type: 3}
-  - {fileID: 21300000, guid: e1e027bdfe6075f4c95a2f02d3243a39, type: 3}
+  - {fileID: 21300000, guid: decebf926c4337745ad4baf4dc833199, type: 3}
+  - {fileID: 21300000, guid: 606b4273e14c9c446ae0d4fe1a6028d5, type: 3}
+  - {fileID: 21300000, guid: 712dd17955f06974c9ed014ac2360f5e, type: 3}
+  - {fileID: 21300000, guid: 10bc7ccbd573bc24fa5c1e42dd7c8abf, type: 3}
+  - {fileID: 21300000, guid: 7b9b4e7e4793b0541b571ed0ba87afd9, type: 3}
+  - {fileID: 21300000, guid: b8adde6f0745d674b8dc7db1a06d149c, type: 3}
   m_PackedSpriteNamesToIndex:
-  - UI_icon_cash
-  - ui_icon_render_t_cons_molotov
-  - ui_icon_render_cons_healthshot_2_regenerator
-  - ui_icon_render_cons_grenade_m67
-  - UI_icon_gold
-  - ui_icon_render_cons_healthshot_2_neurostim
-  - UI_Icon_Renders_tier1_shotgun
-  - ui_icon_render_cons_grenade_m26
+  - ui_spin_golden_indicator
+  - ui_spin_bronze_base
+  - ui_spin_bronze_indicator
+  - ui_spin_golden_base
+  - ui_spin_silver_indicator
+  - ui_spin_silver_base
   m_RenderDataMap: {}
-  m_Tag: Tier1
+  m_Tag: WheelsAtlas
   m_IsVariant: 0
