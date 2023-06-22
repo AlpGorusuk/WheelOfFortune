@@ -10,7 +10,12 @@ public class WheelSO : ScriptableObject
     public e_Spin_Direction e_Spin_Direction;
     public Sprite baseSprite, indicatorSprite;
     public AnimationCurve spinCurve;
-    public int minSpinTime = 3, maxSpinTime = 4;
+    public float minSpinTime = 3, maxSpinTime = 4;
     public Sprite GetWheelBaseSprite() { return baseSprite; }
     public Sprite GetWheelIndicatorSprite() { return indicatorSprite; }
+    public float GetRandomSpintTime()
+    {
+        float randomValue = UnityEngine.Random.Range(minSpinTime, maxSpinTime);
+        return randomValue;
+    }
 }

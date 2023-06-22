@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 using UnityEditor;
-using Unity.VisualScripting;
+using System.Collections;
 
 public class WheelManager : Singleton<WheelManager>, IObservable, IObserver
 {
@@ -24,8 +22,11 @@ public class WheelManager : Singleton<WheelManager>, IObservable, IObserver
     //Observable
     private List<IObserver> observers = new List<IObserver>();
     //For spin
-    private int spinCount = 0;
+    private Wheel currentWheel { get => WheelList[spinCount]; }
+    private WheelSO currentWheelData { get => currentWheel.DataSO; }
     private Wheel oldWheel;
+    private int spinCount = 0;
+    public int SpinCount { get => spinCount; set => spinCount = value; }
 
     //
     private void Start()
@@ -48,11 +49,35 @@ public class WheelManager : Singleton<WheelManager>, IObservable, IObserver
     //Spin Current Wheel---
     public void SpinTheCurrentWheel()
     {
+        int obtainedItemIndex = currentWheel.GetObtainedItemIndex();
+        GameObject wheelItemObj = WheelContainer.wheelItemContainerList[obtainedItemIndex].gameObject;
+        float spinTime = currentWheelData.GetRandomSpintTime();
+        StartCoroutine(SpinWheel(spinTime, wheelItemObj));
+    }
 
+    private IEnumerator SpinWheel(float spinTime, GameObject winningItem)
+    {
+        float itemCount = currentWheel.wheelItemList.Count;
+        float startAngle = -(360 / itemCount);
+        float spinTimer = 0f;
+        int spinDir = (int)e_Spin_Direction.CounterClockwise;
+        float spinMag = 360 * spinDir;
+        AnimationCurve spinCurve = currentWheelData.spinCurve;
+        Transform childToSpin = GetCurrentWheelChildTransform();
+        float targetAngle = (spinMag * spinTime) + winningItem.transform.localEulerAngles.z - ((360 / itemCount * 0.5f) * 2);
+        while (spinTimer < spinTime)
+        {
+            float newRotation = targetAngle * -spinCurve.Evaluate(spinTimer / spinTime);
+            childToSpin.localEulerAngles = new Vector3(0f, 0f, newRotation + startAngle);
+            spinTimer += Time.deltaTime;
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1f);
+        SpinCount++;
     }
 
     //Wheel Initialize----------------------------------------------
-    public GameObject WheelItemPrefab() { return wheelItemPrefab; }
     public Transform GetCurrentWheelChildTransform()
     {
         return WheelContainer.wheelItemParent;
@@ -60,8 +85,6 @@ public class WheelManager : Singleton<WheelManager>, IObservable, IObserver
     //Init Wheel
     private void SetWheel()
     {
-        int spinCount = this.spinCount;
-        Wheel currentWheel = WheelList[spinCount];
         WheelSO currentWheelData = currentWheel.DataSO;
 
         WheelContainer.WheelBaseImage.sprite = currentWheelData.GetWheelBaseSprite();
@@ -92,7 +115,7 @@ public class WheelManager : Singleton<WheelManager>, IObservable, IObserver
             return;
         }
 
-        GameObject wheelObjPrefab = WheelItemPrefab();
+        GameObject wheelObjPrefab = wheelItemPrefab;
 
         for (int i = 0; i < wheelItemCount; i++)
         {
@@ -159,9 +182,6 @@ public class WheelManager : Singleton<WheelManager>, IObservable, IObserver
     //set Wheel Items--------------------------
     public void SetWheelItemObjects()
     {
-        int spinCount = this.spinCount;
-
-        Wheel currentWheel = WheelList[spinCount];
         List<WheelItem> wheelItems = currentWheel.wheelItemList;
 
         for (int i = 0; i < WheelContainer.wheelItemContainerList.Count; i++)

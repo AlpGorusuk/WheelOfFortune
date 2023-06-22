@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public struct WheelItem
+public class WheelItem
 {
     [Range(1f, 99f)]
     //The chance of this item for select 1 to 99
