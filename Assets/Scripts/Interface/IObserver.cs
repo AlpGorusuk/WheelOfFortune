@@ -1,4 +1,4 @@
 public interface IObserver
 {
-    void UpdateObserver(Observable observable);
+    void UpdateObserver(IObservable observable);
 }

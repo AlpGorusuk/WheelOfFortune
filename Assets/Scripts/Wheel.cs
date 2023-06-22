@@ -6,11 +6,13 @@ using UnityEngine;
 [Serializable]
 public class Wheel
 {
-    public List<WheelItem> WheelItemList = new List<WheelItem>();
-    public WheelItem GetObtainedItem()
+    public string nameOfTheWheel;
+    public WheelSO DataSO;
+    public List<WheelItem> wheelItemList = new List<WheelItem>();
+    public WheelItem? GetObtainedItem(List<WheelItem> wheelItemList)
     {
         float weightedSum = 0f;
-        foreach (var item in WheelItemList)
+        foreach (var item in wheelItemList)
         {
             float dropChance = item.GetDropChance();
             weightedSum += dropChance;
@@ -18,7 +20,7 @@ public class Wheel
 
         float randomValue = UnityEngine.Random.value * weightedSum;
 
-        foreach (var item in WheelItemList)
+        foreach (var item in wheelItemList)
         {
             float dropChance = item.GetDropChance();
             randomValue -= dropChance;

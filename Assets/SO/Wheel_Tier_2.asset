@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f82438520e6395542ad3bc6cb3c8b772, type: 3}
   m_Name: Wheel_Tier_2
   m_EditorClassIdentifier: 
-  spriteAtlas: {fileID: 4343727234628468602, guid: 4a891f5f666054746943defe0a7d0a76, type: 2}
   e_Wheel_Types: 1
   e_Spin_Direction: -1
+  baseSprite: {fileID: 21300000, guid: b8adde6f0745d674b8dc7db1a06d149c, type: 3}
+  indicatorSprite: {fileID: 21300000, guid: 7b9b4e7e4793b0541b571ed0ba87afd9, type: 3}
   spinCurve:
     serializedVersion: 2
     m_Curve:
