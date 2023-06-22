@@ -9,7 +9,7 @@ public class Wheel
     public string nameOfTheWheel;
     public WheelSO DataSO;
     public List<WheelItem> wheelItemList = new List<WheelItem>();
-    public int GetObtainedItemIndex()
+    public WheelItem GetObtainedWheelItem()
     {
         float weightedSum = 0f;
         foreach (var item in wheelItemList)
@@ -26,11 +26,15 @@ public class Wheel
             randomValue -= dropChance;
             if (randomValue <= 0)
             {
-                int obtainedObjindex = wheelItemList.IndexOf(item);
-                return obtainedObjindex;
+                return item;
             }
         }
-        return -1;
+        return null;
+    }
+    public int GetObtainedItemIndex(WheelItem item)
+    {
+        int obtainedObjindex = wheelItemList.IndexOf(item);
+        return obtainedObjindex;
     }
 }
 

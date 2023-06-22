@@ -6,6 +6,7 @@ using UnityEngine;
 public class WheelScreen : MonoBehaviour
 {
     [SerializeField] private WheelManager wheelManager;
+    [SerializeField] private CollectedItemPanel collectedItemPanel;
     public void InitWheelScreen()
     {
         wheelManager.InitWheelManager();

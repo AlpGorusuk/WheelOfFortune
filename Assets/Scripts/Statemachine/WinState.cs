@@ -8,4 +8,8 @@ public class WinState : State
     public WinState(UIManager uIManager, Statemachine stateMachine) : base(uIManager, stateMachine)
     {
     }
+    public override void Enter()
+    {
+        uIManager.winStateCallback?.Invoke();
+    }
 }

@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class RewardScreen : MonoBehaviour, IObserver
 {
-    public void InitRewardScene()
+    [SerializeField] private WheelItemContainer obtainedWheelItemContainer;
+    public void InitRewardScreen()
     {
         gameObject.SetActive(true);
     }
 
     public void UpdateObserver(IObservable observable)
     {
-        
+
     }
 
     private void Start()

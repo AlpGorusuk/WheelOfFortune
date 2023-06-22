@@ -11,5 +11,6 @@ public class WheelItem
     public float dropChance;
     public string itemSpriteName;
     public int itemValue;
+    public bool isFailItem;
     public float GetDropChance() { return dropChance; }
 }

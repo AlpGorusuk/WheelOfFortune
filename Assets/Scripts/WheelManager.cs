@@ -7,7 +7,7 @@ using UnityEditor;
 using System.Collections;
 using Unity.VisualScripting;
 
-public class WheelManager : MonoBehaviour, IObservable, IObserver
+public class WheelManager : MonoBehaviour, IObserver
 {
     public WheelContainer WheelContainer;
     public GameObject wheelItemPrefab;
@@ -28,6 +28,7 @@ public class WheelManager : MonoBehaviour, IObservable, IObserver
     private Wheel oldWheel;
     private int spinCount = 0;
     public int SpinCount { get => spinCount; set => spinCount = value; }
+    private List<Tuple<Sprite, int>> obtainedItemData = new List<Tuple<Sprite, int>>();
 
     public void InitWheelManager()
     {
@@ -52,13 +53,15 @@ public class WheelManager : MonoBehaviour, IObservable, IObserver
     //Spin Current Wheel---
     public void SpinTheCurrentWheel()
     {
-        int obtainedItemIndex = currentWheel.GetObtainedItemIndex();
+        WheelItem obtainedWheelItem = currentWheel.GetObtainedWheelItem();
+        int obtainedItemIndex = currentWheel.GetObtainedItemIndex(obtainedWheelItem);
+        Debug.Log(obtainedItemIndex);
         GameObject wheelItemObj = WheelContainer.wheelItemContainerList[obtainedItemIndex].gameObject;
         int spinTime = currentWheelData.GetRandomSpintTime();
-        StartCoroutine(SpinWheel(spinTime, wheelItemObj));
+        StartCoroutine(SpinWheel(spinTime, wheelItemObj, obtainedWheelItem));
     }
 
-    private IEnumerator SpinWheel(float spinTime, GameObject obtainedItem)
+    private IEnumerator SpinWheel(float spinTime, GameObject obtainedItemObj, WheelItem obtainedItem)
     {
         SpinButton.Instance.EnableGameObject(false);
 
@@ -69,7 +72,7 @@ public class WheelManager : MonoBehaviour, IObservable, IObserver
 
         Transform childToSpin = GetCurrentWheelChildTransform();
 
-        float targetRotation = (obtainedItem.transform.localEulerAngles.z + 360f) % 360f;
+        float targetRotation = (obtainedItemObj.transform.localEulerAngles.z + 360f) % 360f;
         float totalRotation = 360f * spinDir;
         float targetAngle = totalRotation * spinTime + targetRotation;
         float spinTimer = 0f;
@@ -83,13 +86,23 @@ public class WheelManager : MonoBehaviour, IObservable, IObserver
         }
 
         yield return new WaitForSeconds(2f);
+        GetObtainedWheelItemData(obtainedItem);
         SpinButton.Instance.EnableGameObject(true);
         SpinCount++;
     }
     //Get Obtained Data---------------------------------------------
-    public void GetObtainedWheelItemData()
+    public void GetObtainedWheelItemData(WheelItem obtainedItem)
     {
-
+        Debug.Log(obtainedItem.itemSpriteName);
+        bool isFailItem = obtainedItem.isFailItem;
+        if (isFailItem)
+        {
+            UIManager.Instance.ChangeStateFail();
+        }
+        else
+        {
+            UIManager.Instance.ChangeStateWin();
+        }
     }
 
     //Wheel Initialize----------------------------------------------
@@ -160,19 +173,6 @@ public class WheelManager : MonoBehaviour, IObservable, IObserver
             Undo.DestroyObjectImmediate(containerList[i].gameObject);
         }
         containerList.RemoveRange(0, _count);
-    }
-
-    //Observable Props-------------------
-    public void Attach(IObserver observer)
-    {
-    }
-
-    public void Detach(IObserver observer)
-    {
-    }
-
-    public void Notify()
-    {
     }
     //Sprite Atlas-------------------------
     public void InitChangeableSpriteAtlas()
@@ -260,4 +260,10 @@ public class WheelContainer
     public Image WheelIndicatorImage;
     public Transform wheelItemParent;
     public List<WheelItemContainer> wheelItemContainerList;
+}
+[Serializable]
+public class DataEntry
+{
+    public Sprite sprite;
+    public int value;
 }

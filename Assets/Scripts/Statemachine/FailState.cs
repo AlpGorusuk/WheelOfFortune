@@ -8,4 +8,8 @@ public class FailState : State
     public FailState(UIManager uIManager, Statemachine stateMachine) : base(uIManager, stateMachine)
     {
     }
+    public override void Enter()
+    {
+        uIManager.failStateCallback?.Invoke();
+    }
 }
