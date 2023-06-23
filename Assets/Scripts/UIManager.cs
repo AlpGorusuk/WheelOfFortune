@@ -6,12 +6,14 @@ public class UIManager : Singleton<UIManager>, IObserver
     [SerializeField] private RewardScreen rewardScreen;
     [SerializeField] private WheelScreen wheelScreen;
     [SerializeField] private FailScreen failScreen;
+    [SerializeField] private HomeScreen homeScreen;
     private WinState winState;
     private FailState failState;
     private PlayState playState;
+    private HomeState homeState;
     private Statemachine statemachine;
-    public Action winStateCallback, failStateCallback, playStateCallback;
-
+    public Action failStateCallback, playStateCallback;
+    public Action<Tuple<Sprite, int, bool>> winStateCallback;
     public override void Awake()
     {
         base.Awake();
@@ -19,6 +21,7 @@ public class UIManager : Singleton<UIManager>, IObserver
         winState = new WinState(this, statemachine);
         failState = new FailState(this, statemachine);
         playState = new PlayState(this, statemachine);
+        homeState = new HomeState(this, statemachine);
 
         playStateCallback += PlayStateCallbackFunction;
         winStateCallback += WinStateCallbackFunction;
@@ -27,6 +30,7 @@ public class UIManager : Singleton<UIManager>, IObserver
     private void Start()
     {
         WheelButton.Instance.Attach(this);
+        statemachine.Initialize(homeState);
     }
     private void OnDisable()
     {
@@ -37,15 +41,15 @@ public class UIManager : Singleton<UIManager>, IObserver
     }
     public void UpdateObserver(IObservable observable)
     {
-        statemachine.Initialize(playState);
+        statemachine.ChangeState(playState);
     }
     private void PlayStateCallbackFunction()
     {
         wheelScreen.InitWheelScreen();
     }
-    public void WinStateCallbackFunction()
+    public void WinStateCallbackFunction(Tuple<Sprite, int, bool> winItem)
     {
-        rewardScreen.InitRewardScreen();
+        rewardScreen.InitRewardScreen(winItem);
     }
 
     public void FailStateCallbackFunction()
@@ -58,10 +62,13 @@ public class UIManager : Singleton<UIManager>, IObserver
     {
         statemachine.ChangeState(failState);
     }
-    public void ChangeStateWin()
+    public void ChangeStateWin(Tuple<Sprite, int, bool> wheelItem)
     {
+        winState.SetWinItem(wheelItem);
         statemachine.ChangeState(winState);
     }
-    //Fail
-    // public void 
+    public void ChangeStatePlay()
+    {
+        statemachine.ChangeState(playState);
+    }
 }

@@ -7,7 +7,7 @@ using UnityEditor;
 using System.Collections;
 using Unity.VisualScripting;
 
-public class WheelManager : MonoBehaviour, IObserver
+public class WheelManager : Singleton<WheelManager>, IObserver
 {
     public WheelContainer WheelContainer;
     public GameObject wheelItemPrefab;
@@ -27,9 +27,8 @@ public class WheelManager : MonoBehaviour, IObserver
     private WheelSO currentWheelData { get => currentWheel.DataSO; }
     private Wheel oldWheel;
     private int spinCount = 0;
+    public Action wheelSpinnedCallback;
     public int SpinCount { get => spinCount; set => spinCount = value; }
-    private List<Tuple<Sprite, int>> obtainedItemData = new List<Tuple<Sprite, int>>();
-
     public void InitWheelManager()
     {
         //Inits
@@ -55,9 +54,10 @@ public class WheelManager : MonoBehaviour, IObserver
     {
         WheelItem obtainedWheelItem = currentWheel.GetObtainedWheelItem();
         int obtainedItemIndex = currentWheel.GetObtainedItemIndex(obtainedWheelItem);
-        Debug.Log(obtainedItemIndex);
+
         GameObject wheelItemObj = WheelContainer.wheelItemContainerList[obtainedItemIndex].gameObject;
         int spinTime = currentWheelData.GetRandomSpintTime();
+
         StartCoroutine(SpinWheel(spinTime, wheelItemObj, obtainedWheelItem));
     }
 
@@ -84,24 +84,37 @@ public class WheelManager : MonoBehaviour, IObserver
             spinTimer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
+        //
+        Tuple<Sprite, int, bool> obtaineItemData = SetObtainedData(obtainedItem);
 
-        yield return new WaitForSeconds(2f);
-        GetObtainedWheelItemData(obtainedItem);
+        yield return new WaitForSeconds(1f);
+        wheelSpinnedCallback?.Invoke();
+        InitObtainedWheelItemData(obtaineItemData);
         SpinButton.Instance.EnableGameObject(true);
         SpinCount++;
     }
+
     //Get Obtained Data---------------------------------------------
-    public void GetObtainedWheelItemData(WheelItem obtainedItem)
+    private Tuple<Sprite, int, bool> SetObtainedData(WheelItem obtainedItem)
     {
-        Debug.Log(obtainedItem.itemSpriteName);
+        string spriteName = "ui_icon_" + obtainedItem.itemSpriteName + "_value(Clone)";
+        Sprite _sprite = GetSpriteFromAtlas(spriteName);
+        int itemValue = obtainedItem.itemValue;
         bool isFailItem = obtainedItem.isFailItem;
+
+        Tuple<Sprite, int, bool> obtaineItemData = new Tuple<Sprite, int, bool>(_sprite, itemValue, isFailItem);
+        return obtaineItemData;
+    }
+    private void InitObtainedWheelItemData(Tuple<Sprite, int, bool> obtainedItem)
+    {
+        bool isFailItem = obtainedItem.Item3;
         if (isFailItem)
         {
             UIManager.Instance.ChangeStateFail();
         }
         else
         {
-            UIManager.Instance.ChangeStateWin();
+            UIManager.Instance.ChangeStateWin(obtainedItem);
         }
     }
 
@@ -156,10 +169,16 @@ public class WheelManager : MonoBehaviour, IObserver
 
             containerList.Add(newWheelObj.GetComponent<WheelItemContainer>());
         }
+        RotateWheelItems(containerList);
     }
-    private void ResetWheelRotation()
+    private void RotateWheelItems(List<WheelItemContainer> wheelObjList)
     {
-
+        int itemCount = wheelObjList.Count;
+        float itemRotation = 360f / itemCount;
+        for (int i = 0; i < itemCount; i++)
+        {
+            wheelObjList[i].transform.localEulerAngles = new Vector3(0f, 0f, itemRotation * -i);
+        }
     }
     //Reset Wheel Item Object On Editor
     public void DeleteWheelItems(WheelManager wheelManager)
