@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2765148173570770940}
   - component: {fileID: 1787696210298800030}
   m_Layer: 5
-  m_Name: CollectedWheelItem
+  m_Name: ObtainedWheelItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

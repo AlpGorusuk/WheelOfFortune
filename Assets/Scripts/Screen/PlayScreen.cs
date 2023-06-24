@@ -1,40 +1,51 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayScreen : BaseScreen, IObserver
 {
     public Action<Tuple<Sprite, int, bool>> ItemCollectedCallback;
+    public Action ItemCollectFailedCallback;
+    private ObtainedItemPanel obtainedItemPanel;
     private void OnEnable()
     {
         WheelManager.Instance.wheelSpinnedCallback += InitObtainedWheelItemData;
+        ItemCollectedCallback += UIManager.Instance.ChangeStateWin;
+        ItemCollectFailedCallback += UIManager.Instance.ChangeStateFail;
     }
-    private void OnDisable()
+    private void OnDestroy()
     {
         WheelManager.Instance.wheelSpinnedCallback -= InitObtainedWheelItemData;
+        ItemCollectedCallback -= UIManager.Instance.ChangeStateWin;
+        ItemCollectFailedCallback -= UIManager.Instance.ChangeStateFail;
+
+        CollectButton.Instance.Detach(this);
     }
     public void InitWheelScreen()
     {
         Show();
+        obtainedItemPanel = GetComponentInChildren<ObtainedItemPanel>();
         WheelManager.Instance.InitWheelManager();
+    }
+    private void Start()
+    {
         CollectButton.Instance.Attach(this);
     }
     public void UpdateObserver(IObservable observable)
     {
-
+         List<Tuple<int, Sprite>> obtainedItemData = obtainedItemPanel.GetSaveableObtainedItemData();
+        GameManager.Instance.SaveGame(obtainedItemData);
+        UIManager.Instance.ChangeStateHome();
     }
     private void InitObtainedWheelItemData(Tuple<Sprite, int, bool> obtainedItem)
     {
         bool isFailItem = obtainedItem.Item3;
         if (isFailItem)
         {
-            UIManager.Instance.ChangeStateFail();
+            ItemCollectFailedCallback?.Invoke();
         }
         else
         {
-            UIManager.Instance.ChangeStateWin(obtainedItem);
             ItemCollectedCallback?.Invoke(obtainedItem);
         }
     }

@@ -13,6 +13,7 @@ public class FailState : State
     public override void Enter()
     {
         //
+        failScreen.InitFailScreen();
     }
     public override void Exit()
     {

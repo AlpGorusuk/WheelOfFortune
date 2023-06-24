@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseButton : MonoBehaviour, IObservable
+public abstract class BaseButton : MonoBehaviour, IObservable, IInteractable
 {
     private List<IObserver> observers = new List<IObserver>();
     public virtual void Attach(IObserver observer)
@@ -21,5 +21,14 @@ public abstract class BaseButton : MonoBehaviour, IObservable
         {
             observer.UpdateObserver(this);
         }
+    }
+
+    public void Show()
+    {
+        gameObject.SetActive(true);
+    }
+    public void Hide()
+    {
+        gameObject.SetActive(false);
     }
 }

@@ -11,15 +11,10 @@ public class WheelManager : Singleton<WheelManager>, IObserver
 {
     public WheelContainer WheelContainer;
     public GameObject wheelItemPrefab;
-    [Space(10)]
-    public SpriteAtlas itemSpriteAtlas;
     [Space(20)]
     public List<Wheel> WheelList;
     [Range(4, 16)]
     public int wheelItemCountSlider = 0;
-
-    //Variables-----------------------------
-    public Dictionary<string, Sprite> itemSpriteDictionary = new Dictionary<string, Sprite>();
     //Observable
     private List<IObserver> observers = new List<IObserver>();
     //For spin
@@ -27,12 +22,14 @@ public class WheelManager : Singleton<WheelManager>, IObserver
     private WheelSO currentWheelData { get => currentWheel.DataSO; }
     private Wheel oldWheel;
     private int spinCount = 0;
-    public Action<Tuple<Sprite, int, bool>> wheelSpinnedCallback;
     public int SpinCount { get => spinCount; set => spinCount = value; }
+    public Action<Tuple<Sprite, int, bool>> wheelSpinnedCallback;
     public override void Awake()
     {
         base.Awake();
-        InitChangeableSpriteAtlas();
+        //Callbacks
+        UIManager.Instance.playScreen.ItemCollectedCallback += UpdateCurrentWheel;
+        UIManager.Instance.playScreen.ItemCollectFailedCallback += ResetWheel;
     }
     public void InitWheelManager()
     {
@@ -47,6 +44,9 @@ public class WheelManager : Singleton<WheelManager>, IObserver
     private void OnDestroy()
     {
         SpinButton.Instance.Detach(this);
+        //Callbacks
+        UIManager.Instance.playScreen.ItemCollectedCallback -= UpdateCurrentWheel;
+        UIManager.Instance.playScreen.ItemCollectFailedCallback -= ResetWheel;
     }
     //IObserver---
     public void UpdateObserver(IObservable observable)
@@ -94,14 +94,13 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         yield return new WaitForSeconds(1f);
         wheelSpinnedCallback?.Invoke(obtaineItemData);
         SpinButton.Instance.EnableGameObject(true);
-        SpinCount++;
     }
 
     //Get Obtained Data---------------------------------------------
     private Tuple<Sprite, int, bool> SetObtainedData(WheelItem obtainedItem)
     {
         string spriteName = "ui_icon_" + obtainedItem.itemSpriteName + "_value(Clone)";
-        Sprite _sprite = GetSpriteFromAtlas(spriteName);
+        Sprite _sprite = UIManager.Instance.GetSpriteFromAtlas(spriteName);
         int itemValue = obtainedItem.itemValue;
         bool isFailItem = obtainedItem.isFailItem;
 
@@ -146,6 +145,8 @@ public class WheelManager : Singleton<WheelManager>, IObserver
 
         oldWheel = currentWheel;
     }
+    private void UpdateCurrentWheel(Tuple<Sprite, int, bool> tuple) { SpinCount++; SetWheel(); SetWheelItemObjects(); }
+    private void ResetWheel() { SpinCount = 0; }
     //Set Wheel Item Object On Editor
     public void UpdateWheelManager()
     {
@@ -192,22 +193,6 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         }
         containerList.RemoveRange(0, _count);
     }
-    //Sprite Atlas-------------------------
-    public void InitChangeableSpriteAtlas()
-    {
-        Sprite[] sprites = new Sprite[itemSpriteAtlas.spriteCount];
-        itemSpriteAtlas.GetSprites(sprites);
-        foreach (Sprite sprite in sprites)
-        {
-            itemSpriteDictionary.Add(sprite.name, sprite);
-        }
-    }
-    private Sprite GetSpriteFromAtlas(string spriteName)
-    {
-        Sprite sprite = null;
-        itemSpriteDictionary.TryGetValue(spriteName, out sprite);
-        return sprite;
-    }
     //set Wheel Items--------------------------
     public void SetWheelItemObjects()
     {
@@ -219,7 +204,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
             WheelItem wheelItem = wheelItems[i];
 
             string spriteName = "ui_icon_" + wheelItem.itemSpriteName + "_value(Clone)";
-            Sprite sprite = GetSpriteFromAtlas(spriteName);
+            Sprite sprite = UIManager.Instance.GetSpriteFromAtlas(spriteName);
             if (sprite != null)
             {
                 container.ImageSprite = sprite;
@@ -248,7 +233,6 @@ public class WheelManagerEditor : Editor
         EditorGUILayout.Space(20f);
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("wheelItemPrefab"), new GUIContent("Wheel Item Prefab:"), true);
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("itemSpriteAtlas"), new GUIContent("item Sprite Atlas:"), true);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("WheelContainer"), new GUIContent("WheelContainer:"), true);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("wheelItemCountSlider"), new GUIContent("wheelItemCountSlider:"), true);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("WheelList"), new GUIContent("WheelList:"), true);

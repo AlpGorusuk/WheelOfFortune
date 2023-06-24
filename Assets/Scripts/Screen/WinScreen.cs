@@ -6,13 +6,20 @@ using UnityEngine;
 public class WinScreen : BaseScreen, IObserver
 {
     [SerializeField] private WheelItemContainer obtainedWheelItemContainer;
-    public void InitRewardScreen(Tuple<Sprite, int, bool> rewardItem)
+    public void InitWinScreen(Tuple<Sprite, int, bool> rewardItem)
     {
         Show();
-        ClaimButton.Instance.Attach(this);
         Sprite _sprite = rewardItem.Item1;
         int _valueText = rewardItem.Item2;
         obtainedWheelItemContainer.UpdateValues(_valueText, _sprite);
+    }
+    private void Start()
+    {
+        ClaimButton.Instance.Attach(this);
+    }
+    private void OnDestroy()
+    {
+        ClaimButton.Instance.Detach(this);
     }
 
     public void UpdateObserver(IObservable observable)

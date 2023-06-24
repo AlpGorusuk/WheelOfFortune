@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseScreen : MonoBehaviour
+public abstract class BaseScreen : MonoBehaviour, IInteractable
 {
-    public virtual void Show() { this.gameObject.SetActive(true); }
-    public virtual void Hide() { this.gameObject.SetActive(false); }
+    public void Show() { this.gameObject.SetActive(true); }
+    public void Hide() { this.gameObject.SetActive(false); }
 }

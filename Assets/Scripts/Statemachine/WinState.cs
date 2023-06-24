@@ -13,14 +13,12 @@ public class WinState : State
     }
     public override void Enter()
     {
-        uIManager.WinCallback += SetWinItem;
-        rewardScreen.InitRewardScreen(winItem);
+        rewardScreen.InitWinScreen(winItem);
     }
     public override void Exit()
     {
-        uIManager.WinCallback -= SetWinItem;
         base.Exit();
         rewardScreen.Hide();
     }
-    private void SetWinItem(Tuple<Sprite, int, bool> item) { winItem = item; }
+    public void SetWinItem(Tuple<Sprite, int, bool> item) { winItem = item; }
 }

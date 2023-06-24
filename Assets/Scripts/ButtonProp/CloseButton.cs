@@ -1,15 +1,15 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FailButton : BaseButton
+public class CloseButton : BaseButton
 {
-    public static FailButton Instance { get; private set; }
+    public static CloseButton Instance { get; private set; }
     public void Awake()
     {
         if (Instance == null)
         {
-            Instance = this as FailButton;
+            Instance = this as CloseButton;
         }
         else
         {
