@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class HomeState : State
 {
-    public HomeState(UIManager uIManager, Statemachine stateMachine) : base(uIManager, stateMachine)
+    private HomeScreen homeScreen;
+    public HomeState(UIManager uIManager, HomeScreen homeScreen, Statemachine stateMachine) : base(uIManager, stateMachine)
     {
+        this.homeScreen = homeScreen;
     }
     public override void Enter()
     {
-        
+        homeScreen.InitHomeScreen();
     }
 }

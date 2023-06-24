@@ -5,11 +5,18 @@ using UnityEngine;
 
 public class FailState : State
 {
-    public FailState(UIManager uIManager, Statemachine stateMachine) : base(uIManager, stateMachine)
+    private FailScreen failScreen;
+    public FailState(UIManager uIManager, FailScreen failScreen, Statemachine stateMachine) : base(uIManager, stateMachine)
     {
+        this.failScreen = failScreen;
     }
     public override void Enter()
     {
-        uIManager.failStateCallback?.Invoke();
+        //
+    }
+    public override void Exit()
+    {
+        failScreen.Hide();
+        base.Exit();
     }
 }

@@ -23,17 +23,21 @@ public class WheelManager : Singleton<WheelManager>, IObserver
     //Observable
     private List<IObserver> observers = new List<IObserver>();
     //For spin
-    private Wheel currentWheel { get => WheelList[spinCount]; }
+    private Wheel currentWheel { get => GetCurrentWheel(); }
     private WheelSO currentWheelData { get => currentWheel.DataSO; }
     private Wheel oldWheel;
     private int spinCount = 0;
-    public Action wheelSpinnedCallback;
+    public Action<Tuple<Sprite, int, bool>> wheelSpinnedCallback;
     public int SpinCount { get => spinCount; set => spinCount = value; }
+    public override void Awake()
+    {
+        base.Awake();
+        InitChangeableSpriteAtlas();
+    }
     public void InitWheelManager()
     {
         //Inits
         SetWheel();
-        InitChangeableSpriteAtlas();
         SetWheelItemObjects();
     }
     private void Start()
@@ -88,8 +92,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         Tuple<Sprite, int, bool> obtaineItemData = SetObtainedData(obtainedItem);
 
         yield return new WaitForSeconds(1f);
-        wheelSpinnedCallback?.Invoke();
-        InitObtainedWheelItemData(obtaineItemData);
+        wheelSpinnedCallback?.Invoke(obtaineItemData);
         SpinButton.Instance.EnableGameObject(true);
         SpinCount++;
     }
@@ -105,23 +108,19 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         Tuple<Sprite, int, bool> obtaineItemData = new Tuple<Sprite, int, bool>(_sprite, itemValue, isFailItem);
         return obtaineItemData;
     }
-    private void InitObtainedWheelItemData(Tuple<Sprite, int, bool> obtainedItem)
-    {
-        bool isFailItem = obtainedItem.Item3;
-        if (isFailItem)
-        {
-            UIManager.Instance.ChangeStateFail();
-        }
-        else
-        {
-            UIManager.Instance.ChangeStateWin(obtainedItem);
-        }
-    }
 
     //Wheel Initialize----------------------------------------------
     public Transform GetCurrentWheelChildTransform()
     {
         return WheelContainer.wheelItemParent;
+    }
+    private Wheel GetCurrentWheel()
+    {
+        if (SpinCount >= WheelList.Count)
+        {
+            SpinCount = 0;
+        }
+        return WheelList[SpinCount];
     }
     public void SetCurrentWheelChildTransform(Vector3 angle)
     {
@@ -230,8 +229,8 @@ public class WheelManager : Singleton<WheelManager>, IObserver
                 Debug.LogWarning("Sprite not found: " + spriteName);
             }
 
-            container.ValueText = wheelItem.itemValue.ToString();
-            container.UpdateValues();
+            container.ItemValue = wheelItem.itemValue;
+            container.UpdateValues(container.ItemValue, container.ImageSprite);
         }
     }
 }
@@ -279,10 +278,4 @@ public class WheelContainer
     public Image WheelIndicatorImage;
     public Transform wheelItemParent;
     public List<WheelItemContainer> wheelItemContainerList;
-}
-[Serializable]
-public class DataEntry
-{
-    public Sprite sprite;
-    public int value;
 }

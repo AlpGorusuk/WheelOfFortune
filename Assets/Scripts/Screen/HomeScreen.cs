@@ -2,19 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HomeScreen : MonoBehaviour, IObserver
+public class HomeScreen : BaseScreen, IObserver
 {
-    public void InitRewardScreen()
+    public void InitHomeScreen()
     {
-        gameObject.SetActive(true);
+        Show();
     }
 
     public void UpdateObserver(IObservable observable)
-    {
-
-    }
-
-    private void Start()
     {
 
     }

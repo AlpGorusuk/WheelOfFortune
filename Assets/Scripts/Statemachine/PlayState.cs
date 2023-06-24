@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class PlayState : State
 {
-    public PlayState(UIManager uIManager, Statemachine stateMachine) : base(uIManager, stateMachine)
+    private PlayScreen wheelScreen;
+    public PlayState(UIManager uIManager, PlayScreen wheelScreen, Statemachine stateMachine) : base(uIManager, stateMachine)
     {
+        this.wheelScreen = wheelScreen;
     }
     public override void Enter()
     {
-        uIManager.playStateCallback?.Invoke();
+        wheelScreen.InitWheelScreen();
     }
 }

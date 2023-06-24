@@ -1,19 +1,15 @@
 using UnityEngine;
 
-public class FailScreen : MonoBehaviour, IObserver
+public class FailScreen : BaseScreen, IObserver
 {
-    public void InitFailScreen()
+    private void Start()
     {
-        gameObject.SetActive(true);
+        Show();
+        FailButton.Instance.Attach(this);
     }
-
     public void UpdateObserver(IObservable observable)
     {
         //Destroy All Collected
-    }
-
-    private void Start()
-    {
-        FailButton.Instance.Attach(this);
+        UIManager.Instance.ChangeStatePlay();
     }
 }

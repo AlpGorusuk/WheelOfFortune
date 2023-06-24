@@ -6,12 +6,21 @@ using UnityEngine;
 public class WinState : State
 {
     private Tuple<Sprite, int, bool> winItem;
-    public WinState(UIManager uIManager, Statemachine stateMachine) : base(uIManager, stateMachine)
+    private WinScreen rewardScreen;
+    public WinState(UIManager uIManager, WinScreen rewardScreen, Statemachine stateMachine) : base(uIManager, stateMachine)
     {
+        this.rewardScreen = rewardScreen;
     }
     public override void Enter()
     {
-        uIManager.winStateCallback?.Invoke(winItem);
+        uIManager.WinCallback += SetWinItem;
+        rewardScreen.InitRewardScreen(winItem);
     }
-    public void SetWinItem(Tuple<Sprite, int, bool> item) { winItem = item; }
+    public override void Exit()
+    {
+        uIManager.WinCallback -= SetWinItem;
+        base.Exit();
+        rewardScreen.Hide();
+    }
+    private void SetWinItem(Tuple<Sprite, int, bool> item) { winItem = item; }
 }

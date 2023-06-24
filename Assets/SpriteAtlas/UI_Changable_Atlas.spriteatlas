@@ -23,7 +23,7 @@ SpriteAtlas:
     platformSettings:
     - serializedVersion: 3
       m_BuildTarget: DefaultTexturePlatform
-      m_MaxTextureSize: 2048
+      m_MaxTextureSize: 1024
       m_ResizeAlgorithm: 0
       m_TextureFormat: -1
       m_TextureCompression: 1
@@ -33,21 +33,33 @@ SpriteAtlas:
       m_Overridden: 0
       m_AndroidETC2FallbackOverride: 0
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    - serializedVersion: 3
+      m_BuildTarget: Android
+      m_MaxTextureSize: 1024
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 50
+      m_TextureCompression: 1
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
       serializedVersion: 2
-      padding: 2
+      padding: 4
       blockOffset: 1
       allowAlphaSplitting: 0
-      enableRotation: 1
+      enableRotation: 0
       enableTightPacking: 1
       enableAlphaDilation: 1
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
-    - {fileID: 102900000, guid: eac963a260cb6b24b86f1d68fe6edd27, type: 3}
     - {fileID: 102900000, guid: d47dd0a8fe83ea84f8b4a1c0c9fd600c, type: 3}
-    - {fileID: 102900000, guid: 752c7576e7ebc3046b442163f69e59bf, type: 3}
+    - {fileID: 102900000, guid: eac963a260cb6b24b86f1d68fe6edd27, type: 3}
     - {fileID: 102900000, guid: b8684a31ad4775d43867c4485130cc5d, type: 3}
+    - {fileID: 102900000, guid: 752c7576e7ebc3046b442163f69e59bf, type: 3}
     - {fileID: 102900000, guid: 8ee1e12d29578e74085a3dc869a6b6b4, type: 3}
     - {fileID: 102900000, guid: fb1306294287c124a84cee27bf4dcc43, type: 3}
     - {fileID: 102900000, guid: 8c74762d81ab56c48b25a4f7a8984b80, type: 3}
@@ -111,7 +123,7 @@ SpriteAtlas:
   - ui_icon_grenade_m67_value
   - ui_icon_gold_value
   - ui_icon_chest_small_value
-  - ui_Icon_vest_points_value
+  - ui_icon_vest_points_value
   - ui_icon_healthshot_neurostim_value
   - ui_icon_chest_silver_value
   - ui_icon_aviator_glasses_easter_value
