@@ -9,33 +9,36 @@ public class UIManager : Singleton<UIManager>, IObserver
     public PlayScreen playScreen;
     public FailScreen failScreen;
     public HomeScreen homeScreen;
-    public WinState winState;
-    public FailState failState;
-    public PlayState playState;
-    public HomeState homeState;
-    public Statemachine statemachine;
+    private WinState winState;
+    private FailState failState;
+    private PlayState playState;
+    private HomeState homeState;
+    private Statemachine statemachine;
     public Action FailCallback;
-    public Action<Tuple<Sprite, int, bool>> WinCallback;
     //Item sprites
-    public SpriteAtlas itemSpriteAtlas;
+    [SerializeField] private SpriteAtlas itemSpriteAtlas;
+    public SpriteAtlas ItemSpriteAtlas { get => itemSpriteAtlas; }
     public Dictionary<string, Sprite> itemSpriteDictionary = new Dictionary<string, Sprite>();
-    public override void Awake()
+    private void Start()
     {
-        base.Awake();
+        SetStates();
+        statemachine.Initialize(homeState);
+        //
+        WheelButton.Instance.Attach(this);
+        //
+        InitSpriteAtlasDictionary();
+    }
+
+    private void SetStates()
+    {
         statemachine = new Statemachine();
+        //
         winState = new WinState(this, winScreen, statemachine);
         failState = new FailState(this, failScreen, statemachine);
         playState = new PlayState(this, playScreen, statemachine);
         homeState = new HomeState(this, homeScreen, statemachine);
-        //init Sprite
-        InitChangeableSpriteAtlas();
+    }
 
-    }
-    private void Start()
-    {
-        statemachine.Initialize(homeState);
-        WheelButton.Instance.Attach(this);
-    }
     private void OnDisable()
     {
         WheelButton.Instance.Detach(this);
@@ -45,16 +48,16 @@ public class UIManager : Singleton<UIManager>, IObserver
         statemachine.ChangeState(playState);
     }
     //Sprite Atlas-------------------------
-    private void InitChangeableSpriteAtlas()
+    public void InitSpriteAtlasDictionary()
     {
-        Sprite[] sprites = new Sprite[itemSpriteAtlas.spriteCount];
-        itemSpriteAtlas.GetSprites(sprites);
+        Sprite[] sprites = new Sprite[ItemSpriteAtlas.spriteCount];
+        ItemSpriteAtlas.GetSprites(sprites);
         foreach (Sprite sprite in sprites)
         {
             itemSpriteDictionary.Add(sprite.name, sprite);
         }
     }
-    public Sprite GetSpriteFromAtlas(string spriteName)
+    public Sprite GetSpriteFromDictionary(string spriteName)
     {
         Sprite sprite = null;
         itemSpriteDictionary.TryGetValue(spriteName, out sprite);

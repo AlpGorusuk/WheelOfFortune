@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class BaseButton : MonoBehaviour, IObservable, IInteractable
 {
@@ -30,5 +31,10 @@ public abstract class BaseButton : MonoBehaviour, IObservable, IInteractable
     public void Hide()
     {
         gameObject.SetActive(false);
+    }
+    public void EnableButton(bool isEnable)
+    {
+        Button _button = GetComponent<Button>();
+        _button.enabled = isEnable;
     }
 }

@@ -23,7 +23,8 @@ public class WheelManager : Singleton<WheelManager>, IObserver
     private Wheel oldWheel;
     private int spinCount = 0;
     public int SpinCount { get => spinCount; set => spinCount = value; }
-    public Action<Tuple<Sprite, int, bool>> wheelSpinnedCallback;
+    public Action<Tuple<Sprite, int, bool>> itemObtainedCallback;
+    public Action SpinStartCallback, SpinStoppedCallback;
     public override void Awake()
     {
         base.Awake();
@@ -39,6 +40,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
     }
     private void Start()
     {
+        SpinStartCallback += () => SpinButton.Instance.EnableGameObject(false);
         SpinButton.Instance.Attach(this);
     }
     private void OnDestroy()
@@ -47,6 +49,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         //Callbacks
         UIManager.Instance.playScreen.ItemCollectedCallback -= UpdateCurrentWheel;
         UIManager.Instance.playScreen.ItemCollectFailedCallback -= ResetWheel;
+        SpinStartCallback -= () => SpinButton.Instance.EnableGameObject(true);
     }
     //IObserver---
     public void UpdateObserver(IObservable observable)
@@ -67,8 +70,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
 
     private IEnumerator SpinWheel(float spinTime, GameObject obtainedItemObj, WheelItem obtainedItem)
     {
-        SpinButton.Instance.EnableGameObject(false);
-
+        SpinStartCallback?.Invoke();
         float itemCount = currentWheel.wheelItemList.Count;
         AnimationCurve spinCurve = currentWheelData.spinCurve;
 
@@ -92,15 +94,15 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         Tuple<Sprite, int, bool> obtaineItemData = SetObtainedData(obtainedItem);
 
         yield return new WaitForSeconds(1f);
-        wheelSpinnedCallback?.Invoke(obtaineItemData);
-        SpinButton.Instance.EnableGameObject(true);
+        itemObtainedCallback?.Invoke(obtaineItemData);
+        SpinStoppedCallback?.Invoke();
     }
 
     //Get Obtained Data---------------------------------------------
     private Tuple<Sprite, int, bool> SetObtainedData(WheelItem obtainedItem)
     {
-        string spriteName = "ui_icon_" + obtainedItem.itemSpriteName + "_value(Clone)";
-        Sprite _sprite = UIManager.Instance.GetSpriteFromAtlas(spriteName);
+        string spriteName = "ui_icon_" + obtainedItem.itemSpriteName + "_value";
+        Sprite _sprite = UIManager.Instance.GetSpriteFromDictionary(spriteName + "(Clone)");
         int itemValue = obtainedItem.itemValue;
         bool isFailItem = obtainedItem.isFailItem;
 
@@ -203,8 +205,8 @@ public class WheelManager : Singleton<WheelManager>, IObserver
             WheelItemContainer container = WheelContainer.wheelItemContainerList[i];
             WheelItem wheelItem = wheelItems[i];
 
-            string spriteName = "ui_icon_" + wheelItem.itemSpriteName + "_value(Clone)";
-            Sprite sprite = UIManager.Instance.GetSpriteFromAtlas(spriteName);
+            string spriteName = "ui_icon_" + wheelItem.itemSpriteName + "_value";
+            Sprite sprite = UIManager.Instance.GetSpriteFromDictionary(spriteName + "(Clone)");
             if (sprite != null)
             {
                 container.ImageSprite = sprite;

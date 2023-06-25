@@ -9,13 +9,33 @@ public class PlayScreen : BaseScreen, IObserver
     private ObtainedItemPanel obtainedItemPanel;
     private void OnEnable()
     {
-        WheelManager.Instance.wheelSpinnedCallback += InitObtainedWheelItemData;
+        WheelManager.Instance.itemObtainedCallback += InitObtainedWheelItemData;
+        WheelManager.Instance.SpinStartCallback += () =>
+        {
+            CollectButton.Instance.EnableButton(false);
+            SpinButton.Instance.Hide();
+        };
+        WheelManager.Instance.SpinStoppedCallback += () =>
+        {
+            CollectButton.Instance.EnableButton(true);
+            SpinButton.Instance.Show();
+        };
         ItemCollectedCallback += UIManager.Instance.ChangeStateWin;
         ItemCollectFailedCallback += UIManager.Instance.ChangeStateFail;
     }
     private void OnDestroy()
     {
-        WheelManager.Instance.wheelSpinnedCallback -= InitObtainedWheelItemData;
+        WheelManager.Instance.itemObtainedCallback -= InitObtainedWheelItemData;
+        WheelManager.Instance.SpinStartCallback -= () =>
+        {
+            CollectButton.Instance.EnableButton(false);
+            SpinButton.Instance.Hide();
+        };
+        WheelManager.Instance.SpinStoppedCallback -= () =>
+        {
+            CollectButton.Instance.EnableButton(true);
+            SpinButton.Instance.Show();
+        };
         ItemCollectedCallback -= UIManager.Instance.ChangeStateWin;
         ItemCollectFailedCallback -= UIManager.Instance.ChangeStateFail;
 
@@ -24,16 +44,16 @@ public class PlayScreen : BaseScreen, IObserver
     public void InitWheelScreen()
     {
         Show();
-        obtainedItemPanel = GetComponentInChildren<ObtainedItemPanel>();
         WheelManager.Instance.InitWheelManager();
     }
     private void Start()
     {
+        obtainedItemPanel = GetComponentInChildren<ObtainedItemPanel>();
         CollectButton.Instance.Attach(this);
     }
     public void UpdateObserver(IObservable observable)
     {
-         List<Tuple<int, Sprite>> obtainedItemData = obtainedItemPanel.GetSaveableObtainedItemData();
+        List<Tuple<int, Sprite>> obtainedItemData = obtainedItemPanel.GetSaveableObtainedItemData();
         GameManager.Instance.SaveGame(obtainedItemData);
         UIManager.Instance.ChangeStateHome();
     }

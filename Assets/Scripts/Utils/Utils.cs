@@ -23,5 +23,17 @@ namespace Utilities
 
             return number.ToString();
         }
+        public static string RemoveUnwantedText(string originalString, string unwantedText)
+        {
+            int index = originalString.IndexOf(unwantedText);
+            if (index >= 0)
+            {
+                return originalString.Substring(0, index) + originalString.Substring(index + unwantedText.Length);
+            }
+            else
+            {
+                return originalString;
+            }
+        }
     }
 }

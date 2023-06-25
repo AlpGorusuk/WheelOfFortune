@@ -4342,7 +4342,7 @@ MonoBehaviour:
       itemSpriteName: gold
       itemValue: 1
       isFailItem: 0
-    - dropChance: 20
+    - dropChance: 50
       itemSpriteName: chest_bronze
       itemValue: 2
       isFailItem: 0
@@ -4350,7 +4350,7 @@ MonoBehaviour:
       itemSpriteName: mle_bayonet_easter_time
       itemValue: 3
       isFailItem: 0
-    - dropChance: 50
+    - dropChance: 80
       itemSpriteName: tier2_mle
       itemValue: 4
       isFailItem: 0
@@ -4385,7 +4385,7 @@ MonoBehaviour:
       itemSpriteName: mle_bayonet_easter_time
       itemValue: 3
       isFailItem: 0
-    - dropChance: 50
+    - dropChance: 80
       itemSpriteName: tier2_mle
       itemValue: 4
       isFailItem: 0
@@ -4420,7 +4420,7 @@ MonoBehaviour:
       itemSpriteName: mle_bayonet_easter_time
       itemValue: 3
       isFailItem: 0
-    - dropChance: 50
+    - dropChance: 80
       itemSpriteName: tier2_mle
       itemValue: 4
       isFailItem: 0
@@ -5585,6 +5585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0534f59bd4c4f5459eee6dec12d5586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ItemSpriteAtlas: {fileID: 4343727234628468602, guid: 334e2670cdcb3c74b943e0b3fe663177, type: 2}
 --- !u!1 &1620802650
 GameObject:
   m_ObjectHideFlags: 0
