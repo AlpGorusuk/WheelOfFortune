@@ -16,7 +16,7 @@ public class PlayState : State
     }
     public override void Exit()
     {
+        playScreen.Hide();
         base.Exit();
-        // playScreen.Hide();
     }
 }

@@ -30,11 +30,12 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         base.Awake();
         //Callbacks
         UIManager.Instance.playScreen.ItemCollectedCallback += UpdateCurrentWheel;
-        UIManager.Instance.playScreen.ItemCollectFailedCallback += ResetWheel;
+        UIManager.Instance.playScreen.ItemCollectFailedCallback += ResetWheelSpinCount;
     }
     public void InitWheelManager()
     {
         //Inits
+        ResetWheelSpinCount();
         SetWheel();
         SetWheelItemObjects();
     }
@@ -48,7 +49,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         SpinButton.Instance.Detach(this);
         //Callbacks
         UIManager.Instance.playScreen.ItemCollectedCallback -= UpdateCurrentWheel;
-        UIManager.Instance.playScreen.ItemCollectFailedCallback -= ResetWheel;
+        UIManager.Instance.playScreen.ItemCollectFailedCallback -= ResetWheelSpinCount;
         SpinStartCallback -= () => SpinButton.Instance.EnableGameObject(true);
     }
     //IObserver---
@@ -94,8 +95,8 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         Tuple<Sprite, int, bool> obtaineItemData = SetObtainedData(obtainedItem);
 
         yield return new WaitForSeconds(1f);
-        itemObtainedCallback?.Invoke(obtaineItemData);
         SpinStoppedCallback?.Invoke();
+        itemObtainedCallback?.Invoke(obtaineItemData);
     }
 
     //Get Obtained Data---------------------------------------------
@@ -148,7 +149,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         oldWheel = currentWheel;
     }
     private void UpdateCurrentWheel(Tuple<Sprite, int, bool> tuple) { SpinCount++; SetWheel(); SetWheelItemObjects(); }
-    private void ResetWheel() { SpinCount = 0; }
+    private void ResetWheelSpinCount() { SpinCount = 0; }
     //Set Wheel Item Object On Editor
     public void UpdateWheelManager()
     {

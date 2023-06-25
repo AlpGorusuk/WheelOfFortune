@@ -54,7 +54,7 @@ public class ObtainedItemPanel : MonoBehaviour
 
         return saveableDataList;
     }
-    private void ClearObtainedItems()
+    public void ClearObtainedItems()
     {
         foreach (var kvp in obtainedItemDataDictionary)
         {

@@ -72,14 +72,10 @@ public class GameManager : Singleton<GameManager>
                     if (existingValues.Length >= 2 && int.TryParse(existingValues[0], out int existingIntValue))
                     {
                         string existingSpriteName = existingValues[1];
-                        // Eğer aynı sprite name'i içeren bir veri varsa, item data'yı topla ve üzerine yaz
+                        // Eğer aynı sprite name'i içeren bir veri varsa item data'yı topla ve üzerine yaz
                         if (existingSpriteName == spriteName)
                         {
                             serializedData += string.Format("{0},{1};", itemData.Item1 + existingIntValue, spriteName);
-                        }
-                        else
-                        {
-                            serializedData += dataString;
                         }
                     }
                 }

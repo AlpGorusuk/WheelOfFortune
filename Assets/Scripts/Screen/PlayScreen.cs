@@ -55,6 +55,7 @@ public class PlayScreen : BaseScreen, IObserver
     {
         List<Tuple<int, Sprite>> obtainedItemData = obtainedItemPanel.GetSaveableObtainedItemData();
         GameManager.Instance.SaveGame(obtainedItemData);
+        obtainedItemPanel.ClearObtainedItems();
         UIManager.Instance.ChangeStateHome();
     }
     private void InitObtainedWheelItemData(Tuple<Sprite, int, bool> obtainedItem)
