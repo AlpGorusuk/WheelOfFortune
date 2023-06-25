@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
+using UnityEditor.Playables;
 using UnityEngine;
-
+using Utilities;
 public class PlayScreen : BaseScreen, IObserver
 {
     public Action<Tuple<Sprite, int, bool>> ItemCollectedCallback;
     public Action ItemCollectFailedCallback;
     private ObtainedItemPanel obtainedItemPanel;
+    private RectTransform rectTransform;
     private void OnEnable()
     {
         WheelManager.Instance.itemObtainedCallback += InitObtainedWheelItemData;
@@ -41,13 +44,9 @@ public class PlayScreen : BaseScreen, IObserver
 
         CollectButton.Instance.Detach(this);
     }
-    public void InitWheelScreen()
-    {
-        Show();
-        WheelManager.Instance.InitWheelManager();
-    }
     private void Start()
     {
+        WheelManager.Instance.InitWheelManager();
         obtainedItemPanel = GetComponentInChildren<ObtainedItemPanel>();
         CollectButton.Instance.Attach(this);
     }

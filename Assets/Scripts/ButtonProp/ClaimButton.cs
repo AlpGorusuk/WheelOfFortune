@@ -16,4 +16,9 @@ public class ClaimButton : BaseButton
             Destroy(gameObject);
         }
     }
+    public new void Show()
+    {
+        gameObject.SetActive(true);
+        AnimateButton();
+    }
 }

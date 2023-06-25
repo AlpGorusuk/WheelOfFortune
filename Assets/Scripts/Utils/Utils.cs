@@ -1,5 +1,8 @@
 namespace Utilities
 {
+    using DG.Tweening;
+    using UnityEngine;
+
     public static class Utils
     {
         public static string FormatNumber(int number)
@@ -34,6 +37,24 @@ namespace Utilities
             {
                 return originalString;
             }
+        }
+        public static void AnimateOpenedPanel(RectTransform panelTransform, Vector3 originalScale, float animationDuration, Ease animationEase)
+        {
+            panelTransform.localScale = Vector3.zero;
+
+            panelTransform.DOScale(originalScale, animationDuration)
+                .SetEase(animationEase);
+        }
+        public static void AnimateButton(RectTransform rectTransform, float animationDuration, float scaleMultiplier, Ease animationEase)
+        {
+            Vector3 originalScale = rectTransform.localScale;
+
+            Sequence sequence = DOTween.Sequence()
+                .Append(rectTransform.DOScale(originalScale * scaleMultiplier, animationDuration).SetEase(animationEase))
+                .Append(rectTransform.DOScale(originalScale, animationDuration).SetEase(animationEase))
+                .SetLoops(-1);
+
+            sequence.Play();
         }
     }
 }

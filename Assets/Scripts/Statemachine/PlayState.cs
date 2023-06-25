@@ -12,7 +12,7 @@ public class PlayState : State
     }
     public override void Enter()
     {
-        playScreen.InitWheelScreen();
+        playScreen.InitScreen();
     }
     public override void Exit()
     {

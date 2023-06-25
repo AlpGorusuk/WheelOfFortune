@@ -2,13 +2,10 @@ using UnityEngine;
 
 public class FailScreen : BaseScreen, IObserver
 {
-    public void InitFailScreen()
-    {
-        Show();
-    }
     private void Start()
     {
         FailButton.Instance.Attach(this);
+        FailButton.Instance.Show();
     }
     private void OnDestroy()
     {

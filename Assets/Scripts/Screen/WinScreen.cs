@@ -9,6 +9,7 @@ public class WinScreen : BaseScreen, IObserver
     public void InitWinScreen(Tuple<Sprite, int, bool> rewardItem)
     {
         Show();
+        AnimateScreen();
         Sprite _sprite = rewardItem.Item1;
         int _valueText = rewardItem.Item2;
         obtainedWheelItemContainer.UpdateValues(_valueText, _sprite);
@@ -16,6 +17,7 @@ public class WinScreen : BaseScreen, IObserver
     private void Start()
     {
         ClaimButton.Instance.Attach(this);
+        ClaimButton.Instance.Show();
     }
     private void OnDestroy()
     {

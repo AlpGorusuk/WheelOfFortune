@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using DG.Tweening;
 public abstract class BaseButton : MonoBehaviour, IObservable, IInteractable
 {
+    public Ease animationEase;
+    public float animationDuration, scaleMultiplier;
     private List<IObserver> observers = new List<IObserver>();
     public virtual void Attach(IObserver observer)
     {
@@ -31,6 +33,11 @@ public abstract class BaseButton : MonoBehaviour, IObservable, IInteractable
     public void Hide()
     {
         gameObject.SetActive(false);
+    }
+    public void AnimateButton()
+    {
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        Utilities.Utils.AnimateButton(rectTransform, animationDuration, scaleMultiplier, animationEase);
     }
     public void EnableButton(bool isEnable)
     {
