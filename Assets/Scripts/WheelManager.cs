@@ -37,11 +37,13 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         //Inits
         ResetWheelSpinCount();
         SetWheel();
+        RotateWheel();
         SetWheelItemObjects();
     }
     private void Start()
     {
         SpinStartCallback += () => SpinButton.Instance.EnableGameObject(false);
+        SpinStoppedCallback += RotateWheel;
         SpinButton.Instance.Attach(this);
     }
     private void OnDestroy()
@@ -51,6 +53,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         UIManager.Instance.playScreen.ItemCollectedCallback -= UpdateCurrentWheel;
         UIManager.Instance.playScreen.ItemCollectFailedCallback -= ResetWheelSpinCount;
         SpinStartCallback -= () => SpinButton.Instance.EnableGameObject(true);
+        SpinStoppedCallback -= RotateWheel;
     }
     //IObserver---
     public void UpdateObserver(IObservable observable)
@@ -148,6 +151,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
 
         oldWheel = currentWheel;
     }
+    private void RotateWheel() { Transform _transform = GetCurrentWheelChildTransform(); _transform.localEulerAngles = Vector3.zero; }
     private void UpdateCurrentWheel(Tuple<Sprite, int, bool> tuple) { SpinCount++; SetWheel(); SetWheelItemObjects(); }
     private void ResetWheelSpinCount() { SpinCount = 0; }
     //Set Wheel Item Object On Editor
