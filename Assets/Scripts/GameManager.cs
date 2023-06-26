@@ -26,7 +26,6 @@ public class GameManager : Singleton<GameManager>
         {
             string[] dataStrings = serializedData.Split(';');
             obtainedItemData = new List<Tuple<int, Sprite>>();
-
             foreach (string dataString in dataStrings)
             {
                 string[] values = dataString.Split(',');
@@ -55,48 +54,73 @@ public class GameManager : Singleton<GameManager>
     }
     private void SaveObtainedData()
     {
-        string serializedData = "";
+        Dictionary<string, int> itemCounts = new Dictionary<string, int>();
 
+        // Ürün adetlerini hesapla
         foreach (Tuple<int, Sprite> itemData in obtainedItemData)
         {
-            string spriteName = itemData.Item2 != null ? itemData.Item2.name : "";
-            string dataString = string.Format("{0},{1};", itemData.Item1, spriteName);
-
-            string existingData = PlayerPrefs.GetString(PlayerPrefsKey);
-            if (!string.IsNullOrEmpty(existingData))
+            if (itemData.Item2 != null)
             {
-                string[] existingDataStrings = existingData.Split(';');
-                foreach (string existingDataString in existingDataStrings)
+                string spriteName = itemData.Item2.name;
+
+                if (itemCounts.ContainsKey(spriteName))
                 {
-                    string[] existingValues = existingDataString.Split(',');
-                    if (existingValues.Length >= 2 && int.TryParse(existingValues[0], out int existingIntValue))
-                    {
-                        string existingSpriteName = existingValues[1];
-                        // Eğer aynı sprite name'i içeren bir veri varsa item data'yı topla ve üzerine yaz
-                        if (existingSpriteName == spriteName)
-                        {
-                            serializedData += string.Format("{0},{1};", itemData.Item1 + existingIntValue, spriteName);
-                        }
-                    }
+                    // Sözlükte zaten bu ürün varsa adetini artır
+                    itemCounts[spriteName] += itemData.Item1;
+                }
+                else
+                {
+                    // Yeni bir ürün ise sözlüğe ekle
+                    itemCounts.Add(spriteName, itemData.Item1);
                 }
             }
-            else
-            {
-                serializedData += dataString;
-            }
+        }
+        // Yeni serialized data oluştur
+        string serializedData = "";
+        foreach (KeyValuePair<string, int> kvp in itemCounts)
+        {
+            string spriteName = kvp.Key;
+            int itemCount = kvp.Value;
+            string dataString = string.Format("{0},{1};", itemCount, spriteName);
+            serializedData += dataString;
         }
 
+        // PlayerPrefs'e kaydet
         PlayerPrefs.SetString(PlayerPrefsKey, serializedData);
         PlayerPrefs.Save();
     }
 
 
-
-    public void SaveGame(List<Tuple<int, Sprite>> targetObtainedItemData)
+    public void SaveGame(List<Tuple<int, Sprite>> targetItemData)
     {
-        obtainedItemData = targetObtainedItemData;
+        MergeItemData(obtainedItemData, targetItemData);
         SaveObtainedData();
         Debug.Log("GAME SAVED!");
+    }
+    private void MergeItemData(List<Tuple<int, Sprite>> obtainedItemData, List<Tuple<int, Sprite>> targetObtainedItemData)
+    {
+        foreach (Tuple<int, Sprite> targetTuple in targetObtainedItemData)
+        {
+            bool foundMatch = false;
+
+            foreach (Tuple<int, Sprite> obtainedTuple in obtainedItemData)
+            {
+                if (obtainedTuple.Item2 == targetTuple.Item2) // Sprite'lar aynı ise
+                {
+                    int newCount = obtainedTuple.Item1 + targetTuple.Item1; // Int değerleri birleştir
+                    Tuple<int, Sprite> mergedTuple = new Tuple<int, Sprite>(newCount, obtainedTuple.Item2);
+                    obtainedItemData.Remove(obtainedTuple); // Eski tuple'ı listeden kaldır
+                    obtainedItemData.Add(mergedTuple); // Yeni tuple'ı ekle
+                    foundMatch = true;
+                    break; // İlgili tuple işlendi, döngüden çık
+                }
+            }
+
+            if (!foundMatch)
+            {
+                obtainedItemData.Add(targetTuple); // Yeni tuple olarak ekle
+            }
+        }
     }
 
     public void LoadGame()

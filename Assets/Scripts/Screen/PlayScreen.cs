@@ -43,7 +43,6 @@ public class PlayScreen : BaseScreen, IObserver
     {
         Show();
         AnimateScreen(Vector3.zero, rectTransform.localScale);
-        WheelManager.Instance.InitWheelManager();
         obtainedItemPanel = GetComponentInChildren<ObtainedItemPanel>();
     }
     private void Start()
@@ -56,9 +55,10 @@ public class PlayScreen : BaseScreen, IObserver
     }
     public void UpdateObserver(IObservable observable)
     {
-        List<Tuple<int, Sprite>> obtainedItemData = obtainedItemPanel.GetSaveableObtainedItemData();
-        GameManager.Instance.SaveGame(obtainedItemData);
+        List<Tuple<int, Sprite>> targetItemData = obtainedItemPanel.GetSaveableObtainedItemData();
+        GameManager.Instance.SaveGame(targetItemData);
         obtainedItemPanel.ClearObtainedItems();
+        WheelManager.Instance.ResetCurrentWheel();
         UIManager.Instance.ChangeStateHome();
     }
     private void InitObtainedWheelItemData(Tuple<Sprite, int, bool> obtainedItem)

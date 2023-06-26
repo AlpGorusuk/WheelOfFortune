@@ -10,6 +10,7 @@ public class CollectedItemPanel : MonoBehaviour, IObserver
     [SerializeField] private Transform wheelItemParent;
     [SerializeField] private float animationDuration;
     [SerializeField] private Ease animationEase;
+    private List<GameObject> itemData = new List<GameObject>();
     public void InitCollectedItemPanel()
     {
         Show();
@@ -37,10 +38,19 @@ public class CollectedItemPanel : MonoBehaviour, IObserver
     }
     public void LoadObtainedItemPanel(List<Tuple<int, Sprite>> obtainedItemData)
     {
+        ClearPanel();
+        
         List<Tuple<int, Sprite>> dataList = obtainedItemData;
         foreach (var data in dataList)
         {
             CreateItem(data);
+        }
+    }
+    private void ClearPanel()
+    {
+        foreach (var item in itemData)
+        {
+            Destroy(item);
         }
     }
     private void CreateItem(Tuple<int, Sprite> obtainedItemData)
@@ -53,5 +63,7 @@ public class CollectedItemPanel : MonoBehaviour, IObserver
 
         _wheelObject.transform.SetParent(wheelItemParent);
         wheelItemContainer.UpdateValues(_itemValue, _objSprite);
+
+        itemData.Add(_wheelObject);
     }
 }

@@ -30,28 +30,25 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         base.Awake();
         //Callbacks
         UIManager.Instance.playScreen.ItemCollectedCallback += UpdateCurrentWheel;
-        UIManager.Instance.playScreen.ItemCollectFailedCallback += ResetWheelSpinCount;
+        UIManager.Instance.playScreen.ItemCollectFailedCallback += ResetCurrentWheel;
     }
-    public void InitWheelManager()
-    {
-        //Inits
-        ResetWheelSpinCount();
-        SetWheel();
-        RotateWheel();
-        SetWheelItemObjects();
-    }
+
     private void Start()
     {
         SpinStartCallback += SpinButton.Instance.Hide;
         SpinStoppedCallback += RotateWheel;
         SpinButton.Instance.Attach(this);
+        //
+        SetWheel();
+        RotateWheel();
+        SetWheelItemObjects();
     }
     private void OnDestroy()
     {
         SpinButton.Instance.Detach(this);
         //Callbacks
         UIManager.Instance.playScreen.ItemCollectedCallback -= UpdateCurrentWheel;
-        UIManager.Instance.playScreen.ItemCollectFailedCallback -= ResetWheelSpinCount;
+        UIManager.Instance.playScreen.ItemCollectFailedCallback -= ResetCurrentWheel;
         SpinStartCallback -= SpinButton.Instance.Hide;
         SpinStoppedCallback -= RotateWheel;
     }
@@ -153,7 +150,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
     }
     private void RotateWheel() { Transform _transform = GetCurrentWheelChildTransform(); _transform.localEulerAngles = Vector3.zero; }
     private void UpdateCurrentWheel(Tuple<Sprite, int, bool> tuple) { SpinCount++; SetWheel(); SetWheelItemObjects(); }
-    private void ResetWheelSpinCount() { SpinCount = 0; }
+    public void ResetCurrentWheel() { SpinCount = 0; SetWheel(); SetWheelItemObjects(); }
     //Set Wheel Item Object On Editor
     public void UpdateWheelManager()
     {
@@ -190,13 +187,12 @@ public class WheelManager : Singleton<WheelManager>, IObserver
     //Reset Wheel Item Object On Editor
     public void DeleteWheelItems(WheelManager wheelManager)
     {
-        Undo.RegisterCompleteObjectUndo(wheelManager, "Delete wheel items");
         List<WheelItemContainer> containerList = wheelManager.WheelContainer.wheelItemContainerList;
         int _count = containerList.Count;
 
         for (int i = 0; i <= _count - 1; i++)
         {
-            Undo.DestroyObjectImmediate(containerList[i].gameObject);
+            DestroyImmediate(containerList[i].gameObject);
         }
         containerList.RemoveRange(0, _count);
     }
