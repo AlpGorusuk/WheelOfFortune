@@ -10,6 +10,10 @@ public abstract class BaseButton : MonoBehaviour, IObservable, IInteractable
     private List<IObserver> observers = new List<IObserver>();
     public virtual void Attach(IObserver observer)
     {
+        if (observers.Contains(observer))
+        {
+            return;
+        }
         observers.Add(observer);
     }
 
@@ -32,6 +36,8 @@ public abstract class BaseButton : MonoBehaviour, IObservable, IInteractable
     }
     public void Hide()
     {
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        Utilities.Utils.StopButtonAnimation(rectTransform);
         gameObject.SetActive(false);
     }
     public void AnimateButton()

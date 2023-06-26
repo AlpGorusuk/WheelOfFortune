@@ -42,7 +42,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
     }
     private void Start()
     {
-        SpinStartCallback += () => SpinButton.Instance.EnableGameObject(false);
+        SpinStartCallback += SpinButton.Instance.Hide;
         SpinStoppedCallback += RotateWheel;
         SpinButton.Instance.Attach(this);
     }
@@ -52,7 +52,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         //Callbacks
         UIManager.Instance.playScreen.ItemCollectedCallback -= UpdateCurrentWheel;
         UIManager.Instance.playScreen.ItemCollectFailedCallback -= ResetWheelSpinCount;
-        SpinStartCallback -= () => SpinButton.Instance.EnableGameObject(true);
+        SpinStartCallback -= SpinButton.Instance.Hide;
         SpinStoppedCallback -= RotateWheel;
     }
     //IObserver---

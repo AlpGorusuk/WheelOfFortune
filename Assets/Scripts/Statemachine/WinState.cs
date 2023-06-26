@@ -6,19 +6,19 @@ using UnityEngine;
 public class WinState : State
 {
     private Tuple<Sprite, int, bool> winItem;
-    private WinScreen rewardScreen;
+    private WinScreen winScreen;
     public WinState(UIManager uIManager, WinScreen rewardScreen, Statemachine stateMachine) : base(uIManager, stateMachine)
     {
-        this.rewardScreen = rewardScreen;
+        this.winScreen = rewardScreen;
     }
     public override void Enter()
     {
-        rewardScreen.InitWinScreen(winItem);
+        winScreen.InitWinScreen(winItem);
     }
     public override void Exit()
     {
         base.Exit();
-        rewardScreen.Hide();
+        winScreen.Hide();
     }
     public void SetWinItem(Tuple<Sprite, int, bool> item) { winItem = item; }
 }

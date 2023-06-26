@@ -10,14 +10,12 @@ public class Statemachine
     {
         CurrentState = startingState;
         startingState.Enter();
-        Debug.Log(CurrentState + "CurrentState");
     }
 
     public void ChangeState(State newState)
     {
         CurrentState.Exit();
         CurrentState = newState;
-        Debug.Log(CurrentState + "CurrentState");
         newState.Enter();
     }
     public void Update_Statemachine()

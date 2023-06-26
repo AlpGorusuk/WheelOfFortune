@@ -1,14 +1,15 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using DG.Tweening;
 using UnityEngine;
-
+using Utilities;
 public class CollectedItemPanel : MonoBehaviour, IObserver
 {
     [SerializeField] private CloseButton closeButton;
     [SerializeField] private GameObject wheelItemPrefab;
     [SerializeField] private Transform wheelItemParent;
+    [SerializeField] private float animationDuration;
+    [SerializeField] private Ease animationEase;
     public void InitCollectedItemPanel()
     {
         Show();
@@ -21,6 +22,8 @@ public class CollectedItemPanel : MonoBehaviour, IObserver
     public void Show()
     {
         gameObject.SetActive(true);
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        Utilities.Utils.AnimatePanel(rectTransform, Vector3.zero, rectTransform.localScale, animationDuration, animationEase);
     }
     public void Hide()
     {

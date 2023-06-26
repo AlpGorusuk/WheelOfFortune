@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
-using DG.Tweening;
-using UnityEditor.Playables;
 using UnityEngine;
-using Utilities;
 public class PlayScreen : BaseScreen, IObserver
 {
     public Action<Tuple<Sprite, int, bool>> ItemCollectedCallback;
     public Action ItemCollectFailedCallback;
     private ObtainedItemPanel obtainedItemPanel;
-    private RectTransform rectTransform;
     private void OnEnable()
     {
         WheelManager.Instance.itemObtainedCallback += InitObtainedWheelItemData;
@@ -25,8 +21,9 @@ public class PlayScreen : BaseScreen, IObserver
         };
         ItemCollectedCallback += UIManager.Instance.ChangeStateWin;
         ItemCollectFailedCallback += UIManager.Instance.ChangeStateFail;
+
     }
-    private void OnDestroy()
+    private void OnDisable()
     {
         WheelManager.Instance.itemObtainedCallback -= InitObtainedWheelItemData;
         WheelManager.Instance.SpinStartCallback -= () =>
@@ -41,14 +38,21 @@ public class PlayScreen : BaseScreen, IObserver
         };
         ItemCollectedCallback -= UIManager.Instance.ChangeStateWin;
         ItemCollectFailedCallback -= UIManager.Instance.ChangeStateFail;
-
-        CollectButton.Instance.Detach(this);
+    }
+    public new void InitScreen()
+    {
+        Show();
+        AnimateScreen(Vector3.zero, rectTransform.localScale);
+        WheelManager.Instance.InitWheelManager();
+        obtainedItemPanel = GetComponentInChildren<ObtainedItemPanel>();
     }
     private void Start()
     {
-        WheelManager.Instance.InitWheelManager();
-        obtainedItemPanel = GetComponentInChildren<ObtainedItemPanel>();
         CollectButton.Instance.Attach(this);
+    }
+    private void OnDestroy()
+    {
+        CollectButton.Instance.Detach(this);
     }
     public void UpdateObserver(IObservable observable)
     {

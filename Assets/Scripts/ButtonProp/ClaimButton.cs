@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class ClaimButton : BaseButton
 {
     public static ClaimButton Instance { get; private set; }

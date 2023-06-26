@@ -2,10 +2,15 @@ using UnityEngine;
 
 public class FailScreen : BaseScreen, IObserver
 {
+    public new void InitScreen()
+    {
+        Show();
+        AnimateScreen(Vector3.zero, rectTransform.localScale);
+        FailButton.Instance.Show();
+    }
     private void Start()
     {
         FailButton.Instance.Attach(this);
-        FailButton.Instance.Show();
     }
     private void OnDestroy()
     {
@@ -13,7 +18,7 @@ public class FailScreen : BaseScreen, IObserver
     }
     public void UpdateObserver(IObservable observable)
     {
-        //Destroy All Collected
+        FailButton.Instance.Hide();
         UIManager.Instance.ChangeStatePlay();
     }
 }

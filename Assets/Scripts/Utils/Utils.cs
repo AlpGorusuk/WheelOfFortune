@@ -38,23 +38,43 @@ namespace Utilities
                 return originalString;
             }
         }
-        public static void AnimateOpenedPanel(RectTransform panelTransform, Vector3 originalScale, float animationDuration, Ease animationEase)
+        public static void AnimatePanel(RectTransform panelTransform, Vector3 setScale, Vector3 targetScale, float animationDuration, Ease animationEase)
         {
-            panelTransform.localScale = Vector3.zero;
+            panelTransform.localScale = setScale;
 
-            panelTransform.DOScale(originalScale, animationDuration)
+            panelTransform.DOScale(targetScale, animationDuration)
                 .SetEase(animationEase);
         }
+        static Sequence scaleSequence, rotateSequence;
+        //Scale anim
         public static void AnimateButton(RectTransform rectTransform, float animationDuration, float scaleMultiplier, Ease animationEase)
         {
             Vector3 originalScale = rectTransform.localScale;
 
-            Sequence sequence = DOTween.Sequence()
+            scaleSequence = DOTween.Sequence()
                 .Append(rectTransform.DOScale(originalScale * scaleMultiplier, animationDuration).SetEase(animationEase))
                 .Append(rectTransform.DOScale(originalScale, animationDuration).SetEase(animationEase))
                 .SetLoops(-1);
 
+            scaleSequence.Play();
+        }
+        public static void StopButtonAnimation(RectTransform rectTransform)
+        {
+            scaleSequence.Kill();
+            rectTransform.localScale = Vector3.one;
+        }
+        //Rotate Anim
+        public static void StartRotateAnimation(RectTransform targetTransform, float rotationSpeed)
+        {
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(targetTransform.DORotate(new Vector3(0f, 0f, 360f), rotationSpeed, RotateMode.FastBeyond360))
+                .SetLoops(-1, LoopType.Restart);
             sequence.Play();
+        }
+        public static void StopRotateAnimation(RectTransform rectTransform)
+        {
+            rotateSequence.Kill();
+            rectTransform.localScale = Vector3.one;
         }
     }
 }

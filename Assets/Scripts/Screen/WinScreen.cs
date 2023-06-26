@@ -1,23 +1,33 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WinScreen : BaseScreen, IObserver
 {
     [SerializeField] private WheelItemContainer obtainedWheelItemContainer;
+    [SerializeField] private RectTransform effectTransform;
+    [SerializeField] private float effectRotataionSpeed;
     public void InitWinScreen(Tuple<Sprite, int, bool> rewardItem)
     {
         Show();
-        AnimateScreen();
+        AnimateScreen(Vector3.zero, rectTransform.localScale);
         Sprite _sprite = rewardItem.Item1;
         int _valueText = rewardItem.Item2;
         obtainedWheelItemContainer.UpdateValues(_valueText, _sprite);
+        ClaimButton.Instance.Show();
+        PlayEffectAnimation();
     }
     private void Start()
     {
         ClaimButton.Instance.Attach(this);
-        ClaimButton.Instance.Show();
+    }
+    private void PlayEffectAnimation()
+    {
+        Utilities.Utils.StartRotateAnimation(effectTransform, effectRotataionSpeed);
+    }
+    private void StopEffectAnimation()
+    {
+        Utilities.Utils.StopRotateAnimation(effectTransform);
     }
     private void OnDestroy()
     {
@@ -26,6 +36,8 @@ public class WinScreen : BaseScreen, IObserver
 
     public void UpdateObserver(IObservable observable)
     {
+        ClaimButton.Instance.Hide();
+        StopEffectAnimation();
         UIManager.Instance.ChangeStatePlay();
     }
 }

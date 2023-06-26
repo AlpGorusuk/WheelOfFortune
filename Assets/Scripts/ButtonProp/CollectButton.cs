@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class CollectButton : BaseButton
 {
     public static CollectButton Instance { get; private set; }

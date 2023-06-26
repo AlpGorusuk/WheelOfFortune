@@ -8,17 +8,21 @@ public abstract class BaseScreen : MonoBehaviour, IInteractable
 {
     public Ease animationEase;
     public float animationDuration;
+    protected RectTransform rectTransform;
+    private void Awake()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
     public void Show() { this.gameObject.SetActive(true); }
     public void Hide() { this.gameObject.SetActive(false); }
     public void InitScreen()
     {
         Show();
-        AnimateScreen();
-        
+        AnimateScreen(Vector3.zero, rectTransform.localScale);//For Open
+
     }
-    public void AnimateScreen()
+    public void AnimateScreen(Vector3 setScale, Vector3 targetScale)
     {
-        RectTransform rectTransform = GetComponent<RectTransform>();
-        Utilities.Utils.AnimateOpenedPanel(rectTransform, rectTransform.localScale, animationDuration, animationEase);
+        Utilities.Utils.AnimatePanel(rectTransform, setScale, targetScale, animationDuration, animationEase);
     }
 }

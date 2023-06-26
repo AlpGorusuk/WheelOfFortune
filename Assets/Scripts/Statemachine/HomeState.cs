@@ -14,4 +14,9 @@ public class HomeState : State
     {
         homeScreen.InitHomeScreen();
     }
+    public override void Exit()
+    {
+        base.Exit();
+        homeScreen.Hide();
+    }
 }

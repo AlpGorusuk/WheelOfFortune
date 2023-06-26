@@ -39,7 +39,7 @@ public class UIManager : Singleton<UIManager>, IObserver
         homeState = new HomeState(this, homeScreen, statemachine);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         WheelButton.Instance.Detach(this);
     }
