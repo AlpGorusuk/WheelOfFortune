@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.U2D;
 using UnityEngine.UI;
 using UnityEditor;
 using System.Collections;
-using Unity.VisualScripting;
+using TMPro;
 
 public class WheelManager : Singleton<WheelManager>, IObserver
 {
@@ -15,6 +14,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
     public List<Wheel> WheelList;
     [Range(4, 16)]
     public int wheelItemCountSlider = 0;
+    public TextMeshProUGUI safeZoneText;
     //Observable
     private List<IObserver> observers = new List<IObserver>();
     //For spin
@@ -30,6 +30,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         base.Awake();
         //Callbacks
         UIManager.Instance.playScreen.ItemCollectedCallback += UpdateCurrentWheel;
+        UIManager.Instance.playScreen.ItemCollectedCallback += UpdateZoneText;
         UIManager.Instance.playScreen.ItemCollectFailedCallback += ResetCurrentWheel;
     }
 
@@ -48,6 +49,7 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         SpinButton.Instance.Detach(this);
         //Callbacks
         UIManager.Instance.playScreen.ItemCollectedCallback -= UpdateCurrentWheel;
+        UIManager.Instance.playScreen.ItemCollectedCallback -= UpdateZoneText;
         UIManager.Instance.playScreen.ItemCollectFailedCallback -= ResetCurrentWheel;
         SpinStartCallback -= SpinButton.Instance.Hide;
         SpinStoppedCallback -= RotateWheel;
@@ -149,8 +151,38 @@ public class WheelManager : Singleton<WheelManager>, IObserver
         oldWheel = currentWheel;
     }
     private void RotateWheel() { Transform _transform = GetCurrentWheelChildTransform(); _transform.localEulerAngles = Vector3.zero; }
-    private void UpdateCurrentWheel(Tuple<Sprite, int, bool> tuple) { SpinCount++; SetWheel(); SetWheelItemObjects(); }
-    public void ResetCurrentWheel() { SpinCount = 0; SetWheel(); SetWheelItemObjects(); }
+    private void UpdateCurrentWheel(Tuple<Sprite, int, bool> tuple)
+    {
+        SpinCount++; SetWheel();
+        SetWheelItemObjects();
+    }
+    public void ResetCurrentWheel()
+    {
+        SpinCount = 0;
+        SetWheel();
+        SetWheelItemObjects();
+        safeZoneText.gameObject.SetActive(false);
+    }
+    //Update Zone Text
+    private void UpdateZoneText(Tuple<Sprite, int, bool> tuple)
+    {
+        int count = SpinCount;
+        if (count % 30 == 0)
+        {
+            safeZoneText.text = "YOU ARE IN SUPER ZONE!";
+            safeZoneText.gameObject.SetActive(true);
+            return;
+        }
+        else if (count % 5 == 0)
+        {
+            safeZoneText.text = "YOU ARE IN SUPER ZONE!";
+            safeZoneText.gameObject.SetActive(true);
+        }
+        else
+        {
+            safeZoneText.gameObject.SetActive(false);
+        }
+    }
     //Set Wheel Item Object On Editor
     public void UpdateWheelManager()
     {
@@ -239,6 +271,7 @@ public class WheelManagerEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("WheelContainer"), new GUIContent("WheelContainer:"), true);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("wheelItemCountSlider"), new GUIContent("wheelItemCountSlider:"), true);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("WheelList"), new GUIContent("WheelList:"), true);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("safeZoneText"), new GUIContent("safeZoneText:"), true);
 
         EditorGUILayout.Space(20f);
 
