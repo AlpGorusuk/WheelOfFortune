@@ -1,4 +1,4 @@
-public enum e_Spin_Direction
+public enum Spin_Direction
 {
     CounterClockwise = -1,
     Clockwise = 1

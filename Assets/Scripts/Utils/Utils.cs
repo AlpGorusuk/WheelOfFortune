@@ -26,7 +26,7 @@ namespace Utilities
 
             return number.ToString();
         }
-        public static string RemoveUnwantedText(string originalString, string unwantedText)
+        public static string RemoveUnusedText(string originalString, string unwantedText)
         {
             int index = originalString.IndexOf(unwantedText);
             if (index >= 0)

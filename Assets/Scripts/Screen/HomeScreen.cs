@@ -1,33 +1,39 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using WheelOfFortune.Managers;
+using WheelOfFortune.UI.Panels;
+using WheelOfFortune.UI.Buttons;
 
-public class HomeScreen : BaseScreen, IObserver
+namespace WheelOfFortune.UI.Screens
 {
-    [SerializeField] private OpenButton openButton;
-    [SerializeField] private CollectedItemPanel collectedItemPanel;
-    public void InitHomeScreen()
+    public class HomeScreen : BaseScreen, IObserver
     {
-        Show();
-        LoadCollectedItemPanel();
+        [SerializeField] private OpenButton openButton;
+        [SerializeField] private CollectedItemPanel collectedItemPanel;
+        public void InitHomeScreen()
+        {
+            Show();
+            LoadCollectedItemPanel();
+        }
+        private void Start()
+        {
+            openButton.Attach(this);
+        }
+        private void OnDestroy()
+        {
+            openButton.Detach(this);
+        }
+        public void UpdateObserver(IObservable observable)
+        {
+            collectedItemPanel.InitCollectedItemPanel();
+            openButton.Hide();
+        }
+        private void LoadCollectedItemPanel()
+        {
+            List<Tuple<int, Sprite>> obtainedItemData = GameManager.Instance.ObtainedItemData;
+            collectedItemPanel.LoadObtainedItemPanel(obtainedItemData);
+        }
+        public void ShowOpenButton() { openButton.Show(); }
     }
-    private void Start()
-    {
-        openButton.Attach(this);
-    }
-    private void OnDestroy()
-    {
-        openButton.Detach(this);
-    }
-    public void UpdateObserver(IObservable observable)
-    {
-        collectedItemPanel.InitCollectedItemPanel();
-        openButton.Hide();
-    }
-    private void LoadCollectedItemPanel()
-    {
-        List<Tuple<int, Sprite>> obtainedItemData = GameManager.Instance.ObtainedItemData;
-        collectedItemPanel.LoadObtainedItemPanel(obtainedItemData);
-    }
-    public void ShowOpenButton() { openButton.Show(); }
 }

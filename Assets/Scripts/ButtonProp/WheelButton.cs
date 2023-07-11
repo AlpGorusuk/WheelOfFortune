@@ -1,19 +1,18 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class WheelButton : BaseButton
+namespace WheelOfFortune.UI.Buttons
 {
-    public static WheelButton Instance { get; private set; }
-    public void Awake()
+    public class WheelButton : BaseButton
     {
-        if (Instance == null)
+        public static WheelButton Instance { get; private set; }
+        public void Awake()
         {
-            Instance = this as WheelButton;
-        }
-        else
-        {
-            Destroy(gameObject);
+            if (Instance == null)
+            {
+                Instance = this as WheelButton;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

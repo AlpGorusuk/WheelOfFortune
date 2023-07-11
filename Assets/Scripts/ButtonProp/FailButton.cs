@@ -1,20 +1,24 @@
-public class FailButton : BaseButton
+namespace WheelOfFortune.UI.Buttons
 {
-    public static FailButton Instance { get; private set; }
-    public new void Show()
+
+    public class FailButton : BaseButton
     {
-        gameObject.SetActive(true);
-        AnimateButton();
-    }
-    public void Awake()
-    {
-        if (Instance == null)
+        public static FailButton Instance { get; private set; }
+        public new void Show()
         {
-            Instance = this as FailButton;
+            gameObject.SetActive(true);
+            AnimateButton();
         }
-        else
+        public void Awake()
         {
-            Destroy(gameObject);
+            if (Instance == null)
+            {
+                Instance = this as FailButton;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

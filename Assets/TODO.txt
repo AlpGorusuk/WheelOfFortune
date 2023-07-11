@@ -1,0 +1,3 @@
+- remove magic numbers
+- use namespaces
+- use eventManager for call actions

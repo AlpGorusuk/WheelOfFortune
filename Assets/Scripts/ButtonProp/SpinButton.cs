@@ -1,19 +1,18 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class SpinButton : BaseButton
+namespace WheelOfFortune.UI.Buttons
 {
-    public static SpinButton Instance { get; private set; }
-    public void Awake()
+    public class SpinButton : BaseButton
     {
-        if (Instance == null)
+        public static SpinButton Instance { get; private set; }
+        public void Awake()
         {
-            Instance = this as SpinButton;
-        }
-        else
-        {
-            Destroy(gameObject);
+            if (Instance == null)
+            {
+                Instance = this as SpinButton;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+using WheelOfFortune.Managers;
+using WheelOfFortune.UI.Screens;
 public class HomeState : State
 {
     private HomeScreen homeScreen;
@@ -16,7 +13,6 @@ public class HomeState : State
     }
     public override void Exit()
     {
-        base.Exit();
         homeScreen.Hide();
     }
 }

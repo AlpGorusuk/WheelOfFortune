@@ -1,15 +1,19 @@
-public class CollectButton : BaseButton
+namespace WheelOfFortune.UI.Buttons
 {
-    public static CollectButton Instance { get; private set; }
-    public void Awake()
+    public class CollectButton : BaseButton
     {
-        if (Instance == null)
+        public static CollectButton Instance { get; private set; }
+        public void Awake()
         {
-            Instance = this as CollectButton;
-        }
-        else
-        {
-            Destroy(gameObject);
+            if (Instance == null)
+            {
+                Instance = this as CollectButton;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
+
 }

@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+using WheelOfFortune.Managers;
+using WheelOfFortune.UI.Screens;
 public class PlayState : State
 {
     private PlayScreen playScreen;
@@ -17,6 +14,5 @@ public class PlayState : State
     public override void Exit()
     {
         playScreen.Hide();
-        base.Exit();
     }
 }

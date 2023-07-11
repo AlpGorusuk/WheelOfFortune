@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+using WheelOfFortune.Managers;
 public abstract class State
 {
     protected UIManager uIManager;
@@ -13,10 +9,8 @@ public abstract class State
         this.stateMachine = stateMachine;
     }
 
-    public virtual void Enter()
-    {
-
-    }
+    public abstract void Enter();
+    public abstract void Exit();
 
     public virtual void FixedUpdate()
     {
@@ -28,8 +22,4 @@ public abstract class State
 
     }
 
-    public virtual void Exit()
-    {
-
-    }
 }

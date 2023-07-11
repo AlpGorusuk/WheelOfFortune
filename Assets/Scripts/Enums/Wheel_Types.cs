@@ -1,4 +1,4 @@
-public enum e_Wheel_Types
+public enum Wheel_Types
 {
     bronze,
     silver,

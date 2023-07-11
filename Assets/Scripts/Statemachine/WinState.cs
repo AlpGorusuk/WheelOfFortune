@@ -1,8 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
+using WheelOfFortune.Managers;
+using WheelOfFortune.UI.Screens;
 public class WinState : State
 {
     private Tuple<Sprite, int, bool> winItem;
@@ -17,7 +16,6 @@ public class WinState : State
     }
     public override void Exit()
     {
-        base.Exit();
         winScreen.Hide();
     }
     public void SetWinItem(Tuple<Sprite, int, bool> item) { winItem = item; }

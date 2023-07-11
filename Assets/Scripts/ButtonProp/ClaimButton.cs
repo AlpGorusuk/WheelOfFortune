@@ -1,20 +1,24 @@
-public class ClaimButton : BaseButton
+
+namespace WheelOfFortune.UI.Buttons
 {
-    public static ClaimButton Instance { get; private set; }
-    public void Awake()
+    public class ClaimButton : BaseButton
     {
-        if (Instance == null)
+        public static ClaimButton Instance { get; private set; }
+        public void Awake()
         {
-            Instance = this as ClaimButton;
+            if (Instance == null)
+            {
+                Instance = this as ClaimButton;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
-        else
+        public new void Show()
         {
-            Destroy(gameObject);
+            gameObject.SetActive(true);
+            AnimateButton();
         }
-    }
-    public new void Show()
-    {
-        gameObject.SetActive(true);
-        AnimateButton();
     }
 }

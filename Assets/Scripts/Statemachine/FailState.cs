@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+using WheelOfFortune.Managers;
+using WheelOfFortune.UI.Screens;
 public class FailState : State
 {
     private FailScreen failScreen;
@@ -18,6 +15,5 @@ public class FailState : State
     public override void Exit()
     {
         failScreen.Hide();
-        base.Exit();
     }
 }

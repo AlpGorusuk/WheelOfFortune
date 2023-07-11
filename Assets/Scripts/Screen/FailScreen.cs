@@ -1,24 +1,29 @@
 using UnityEngine;
+using WheelOfFortune.Managers;
+using WheelOfFortune.UI.Buttons;
 
-public class FailScreen : BaseScreen, IObserver
+namespace WheelOfFortune.UI.Screens
 {
-    public new void InitScreen()
+    public class FailScreen : BaseScreen, IObserver
     {
-        Show();
-        AnimateScreen(Vector3.zero, rectTransform.localScale);
-        FailButton.Instance.Show();
-    }
-    private void Start()
-    {
-        FailButton.Instance.Attach(this);
-    }
-    private void OnDestroy()
-    {
-        FailButton.Instance.Detach(this);
-    }
-    public void UpdateObserver(IObservable observable)
-    {
-        FailButton.Instance.Hide();
-        UIManager.Instance.ChangeStatePlay();
+        public new void InitScreen()
+        {
+            Show();
+            AnimateScreen(Vector3.zero, rectTransform.localScale);
+            FailButton.Instance.Show();
+        }
+        private void Start()
+        {
+            FailButton.Instance.Attach(this);
+        }
+        private void OnDestroy()
+        {
+            FailButton.Instance.Detach(this);
+        }
+        public void UpdateObserver(IObservable observable)
+        {
+            FailButton.Instance.Hide();
+            UIManager.Instance.ChangeStatePlay();
+        }
     }
 }

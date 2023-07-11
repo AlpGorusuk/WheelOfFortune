@@ -1,19 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class CloseButton : BaseButton
+namespace WheelOfFortune.UI.Buttons
 {
-    public static CloseButton Instance { get; private set; }
-    public void Awake()
+    public class CloseButton : BaseButton
     {
-        if (Instance == null)
+        public static CloseButton Instance { get; private set; }
+        public void Awake()
         {
-            Instance = this as CloseButton;
-        }
-        else
-        {
-            Destroy(gameObject);
+            if (Instance == null)
+            {
+                Instance = this as CloseButton;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
