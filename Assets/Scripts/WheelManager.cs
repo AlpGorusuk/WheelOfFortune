@@ -19,7 +19,10 @@ namespace WheelOfFortune.Managers
         public int wheelItemCountSlider = 0;
         [Range(0, 2)]
         public float resultScreenDelay = 1;
-        public TextMeshProUGUI safeZoneText;
+        //Safe Zone params
+        public TextMeshProUGUI safeZoneTMText;
+        public string SafeZoneText, SuperZoneText;
+        public int SuperZoneCount = 30, SafeZoneCount = 5;
         //Observable
         private List<IObserver> observers = new List<IObserver>();
         //For spin
@@ -32,8 +35,7 @@ namespace WheelOfFortune.Managers
         public Action SpinStartCallback, SpinStoppedCallback;
         //Consts
         private const float FullDegreeOfCircle = 360;
-        private const int SuperZoneCount = 30, SafeZoneCount = 5;
-        private const string SpriteCloneText = "(Clone)", SafeZoneText = "YOU ARE IN SAFE ZONE!", SuperZoneText = "YOU ARE IN SUPER ZONE!";
+        private const string SpriteCloneText = "(Clone)";
         public override void Awake()
         {
             base.Awake();
@@ -170,7 +172,7 @@ namespace WheelOfFortune.Managers
             SpinCount = 0;
             SetWheel();
             SetWheelItemObjects();
-            safeZoneText.gameObject.SetActive(false);
+            safeZoneTMText.gameObject.SetActive(false);
         }
         //Update Zone Text
         private void UpdateZoneText(Tuple<Sprite, int, bool> tuple)
@@ -178,18 +180,18 @@ namespace WheelOfFortune.Managers
             int count = SpinCount;
             if (count % SuperZoneCount == 0)
             {
-                safeZoneText.text = SuperZoneText;
-                safeZoneText.gameObject.SetActive(true);
+                safeZoneTMText.text = SuperZoneText;
+                safeZoneTMText.gameObject.SetActive(true);
                 return;
             }
             else if (count % SafeZoneCount == 0)
             {
-                safeZoneText.text = SafeZoneText;
-                safeZoneText.gameObject.SetActive(true);
+                safeZoneTMText.text = SafeZoneText;
+                safeZoneTMText.gameObject.SetActive(true);
             }
             else
             {
-                safeZoneText.gameObject.SetActive(false);
+                safeZoneTMText.gameObject.SetActive(false);
             }
         }
         //Set Wheel Item Object On Editor
@@ -282,7 +284,12 @@ namespace WheelOfFortune.Managers
             EditorGUILayout.PropertyField(serializedObject.FindProperty("WheelContainer"), new GUIContent("Wheel Container:"), true);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("wheelItemCountSlider"), new GUIContent("wheel Item Count Slider:"), true);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("WheelList"), new GUIContent("WheelList:"), true);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("safeZoneText"), new GUIContent("safe Zone Text:"), true);
+            EditorGUILayout.Space(20f);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("safeZoneTMText"), new GUIContent("Safe Zone TMGUI:"), true);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("SafeZoneText"), new GUIContent("SafeZone Text:"), true);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("SuperZoneText"), new GUIContent("SuperZone Text:"), true);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("SafeZoneCount"), new GUIContent("SafeZone Count:"), true);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("SuperZoneCount"), new GUIContent("SuperZone Count:"), true);
 
             EditorGUILayout.Space(20f);
 

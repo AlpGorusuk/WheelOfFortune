@@ -5846,6 +5846,10 @@ MonoBehaviour:
   wheelItemCountSlider: 8
   resultScreenDelay: 1
   safeZoneText: {fileID: 1913532340}
+  SafeZoneText: YOU ARE IN SAFE ZONE!
+  SuperZoneText: YOU ARE IN SUPER ZONE!
+  SuperZoneCount: 30
+  SafeZoneCount: 5
 --- !u!224 &1315688097
 RectTransform:
   m_ObjectHideFlags: 0
