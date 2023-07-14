@@ -1,18 +1,40 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class EventManager : MonoBehaviour
+public class EventManager<T>
 {
-    // Start is called before the first frame update
-    void Start()
+    private Dictionary<Delegate, Action<T>> eventHandlers;
+
+    public EventManager()
     {
-        
+        eventHandlers = new Dictionary<Delegate, Action<T>>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void AddEventListener(Delegate eventName, Action<T> eventHandler)
     {
-        
+        if (eventHandlers.ContainsKey(eventName))
+        {
+            eventHandlers[eventName] += eventHandler;
+        }
+        else
+        {
+            eventHandlers[eventName] = eventHandler;
+        }
+    }
+
+    public void RemoveEventListener(Delegate eventName, Action<T> eventHandler)
+    {
+        if (eventHandlers.ContainsKey(eventName))
+        {
+            eventHandlers[eventName] -= eventHandler;
+        }
+    }
+
+    public void TriggerEvent(Delegate eventName, T args)
+    {
+        if (eventHandlers.ContainsKey(eventName))
+        {
+            eventHandlers[eventName]?.Invoke(args);
+        }
     }
 }

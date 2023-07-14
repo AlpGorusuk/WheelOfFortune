@@ -40,6 +40,8 @@ namespace WheelOfFortune.Managers
         {
             base.Awake();
             //Callbacks
+            EventManager<Tuple<Sprite, int, bool>> eventManager = new EventManager<Tuple<Sprite, int, bool>>();
+            eventManager.AddEventListener(itemObtainedCallback,UpdateCurrentWheel);
             UIManager.Instance.playScreen.ItemCollectedCallback += UpdateCurrentWheel;
             UIManager.Instance.playScreen.ItemCollectedCallback += UpdateZoneText;
             UIManager.Instance.playScreen.ItemCollectFailedCallback += ResetCurrentWheel;
