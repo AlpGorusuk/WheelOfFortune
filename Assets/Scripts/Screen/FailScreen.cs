@@ -9,17 +9,19 @@ namespace WheelOfFortune.UI.Screens
         public override void InitScreen()
         {
             base.InitScreen();
+
+            FailButton.Instance.Attach(this);
             FailButton.Instance.Show(true);
             FailButton.Instance.AnimateButton(true);
         }
-        private void Start()
+
+        private void OnDisable()
         {
-            FailButton.Instance.Attach(this);
+            FailButton.Instance.AnimateButton(false);
         }
         private void OnDestroy()
         {
             FailButton.Instance.Detach(this);
-            FailButton.Instance.AnimateButton(false);
         }
         public void UpdateObserver(IObservable observable)
         {

@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using WheelOfFortune.Managers;
 using WheelOfFortune.UI.Buttons;
@@ -18,18 +19,19 @@ namespace WheelOfFortune.UI.Screens
             int _valueText = rewardItem.Item2;
             obtainedWheelItemContainer.UpdateValues(_valueText, _sprite);
             PlayEffectAnimation();
+
+            ClaimButton.Instance.Attach(this);
             ClaimButton.Instance.Show(true);
             ClaimButton.Instance.AnimateButton(true);
         }
-        private void Start()
-        {
-            ClaimButton.Instance.Attach(this);
-        }
         private void OnDestroy()
+        {
+            ClaimButton.Instance.Detach(this);
+        }
+        private void OnDisable()
         {
             ClaimButton.Instance.AnimateButton(false);
             StopEffectAnimation();
-            ClaimButton.Instance.Detach(this);
         }
         private void PlayEffectAnimation()
         {
