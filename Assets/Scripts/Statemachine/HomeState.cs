@@ -9,10 +9,10 @@ public class HomeState : State
     }
     public override void Enter()
     {
-        homeScreen.InitHomeScreen();
+        homeScreen.InitScreen();
     }
     public override void Exit()
     {
-        homeScreen.Hide();
+        homeScreen.Show(false);
     }
 }

@@ -1,40 +1,40 @@
 using System;
 using System.Collections.Generic;
 
-public class EventManager<T>
+public class EventManager
 {
-    private Dictionary<Delegate, Action<T>> eventHandlers;
+    private Dictionary<Type, Delegate> eventHandlers;
 
     public EventManager()
     {
-        eventHandlers = new Dictionary<Delegate, Action<T>>();
+        eventHandlers = new Dictionary<Type, Delegate>();
     }
 
-    public void AddEventListener(Delegate eventName, Action<T> eventHandler)
+    public void AddEventListener<T>(Action<T> eventHandler)
     {
-        if (eventHandlers.ContainsKey(eventName))
+        if (eventHandlers.ContainsKey(typeof(T)))
         {
-            eventHandlers[eventName] += eventHandler;
+            eventHandlers[typeof(T)] = (eventHandlers[typeof(T)] as Action<T>) + eventHandler;
         }
         else
         {
-            eventHandlers[eventName] = eventHandler;
+            eventHandlers[typeof(T)] = eventHandler;
         }
     }
 
-    public void RemoveEventListener(Delegate eventName, Action<T> eventHandler)
+    public void RemoveEventListener<T>(Action<T> eventHandler)
     {
-        if (eventHandlers.ContainsKey(eventName))
+        if (eventHandlers.ContainsKey(typeof(T)))
         {
-            eventHandlers[eventName] -= eventHandler;
+            eventHandlers[typeof(T)] = (eventHandlers[typeof(T)] as Action<T>) - eventHandler;
         }
     }
 
-    public void TriggerEvent(Delegate eventName, T args)
+    public void TriggerEvent<T>(T args)
     {
-        if (eventHandlers.ContainsKey(eventName))
+        if (eventHandlers.ContainsKey(typeof(T)))
         {
-            eventHandlers[eventName]?.Invoke(args);
+            (eventHandlers[typeof(T)] as Action<T>)?.Invoke(args);
         }
     }
 }

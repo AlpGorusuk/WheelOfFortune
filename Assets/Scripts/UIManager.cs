@@ -18,7 +18,6 @@ namespace WheelOfFortune.Managers
         private PlayState playState;
         private HomeState homeState;
         private Statemachine statemachine;
-        public Action FailCallback;
         //Item sprites
         [SerializeField] private SpriteAtlas itemSpriteAtlas;
         public SpriteAtlas ItemSpriteAtlas { get => itemSpriteAtlas; }
@@ -70,7 +69,6 @@ namespace WheelOfFortune.Managers
         //States-------------------------------
         public void ChangeStateFail()
         {
-            FailCallback?.Invoke();
             statemachine.ChangeState(failState);
         }
         public void ChangeStateWin(Tuple<Sprite, int, bool> wheelItem)

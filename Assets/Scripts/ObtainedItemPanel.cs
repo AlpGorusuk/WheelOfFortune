@@ -12,13 +12,13 @@ namespace WheelOfFortune.UI.Panels
         private Dictionary<Sprite, Tuple<int, WheelItemContainer>> obtainedItemDataDictionary = new Dictionary<Sprite, Tuple<int, WheelItemContainer>>();
         private void OnEnable()
         {
-            UIManager.Instance.playScreen.ItemCollectedCallback += UpdateObtainItemDictionary;
-            UIManager.Instance.FailCallback += ClearObtainedItems;
+            UIManager.Instance.playScreen.AddEventListener<Tuple<Sprite, int, bool>>(UpdateObtainItemDictionary);
+            UIManager.Instance.playScreen.AddEventListener<EventArgs>(args => ClearObtainedItems());
         }
         private void OnDisable()
         {
-            UIManager.Instance.playScreen.ItemCollectedCallback -= UpdateObtainItemDictionary;
-            UIManager.Instance.FailCallback -= ClearObtainedItems;
+            UIManager.Instance.playScreen.RemoveEventListener<Tuple<Sprite, int, bool>>(UpdateObtainItemDictionary);
+            UIManager.Instance.playScreen.RemoveEventListener<EventArgs>(args => ClearObtainedItems());
         }
         private void UpdateObtainItemDictionary(Tuple<Sprite, int, bool> obtainedItemData)
         {

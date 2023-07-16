@@ -3,7 +3,5 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    public void Show();
-
-    public void Hide();
+    public void Show(bool _value);
 }

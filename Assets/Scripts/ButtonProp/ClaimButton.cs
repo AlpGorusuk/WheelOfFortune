@@ -15,10 +15,5 @@ namespace WheelOfFortune.UI.Buttons
                 Destroy(gameObject);
             }
         }
-        public new void Show()
-        {
-            gameObject.SetActive(true);
-            AnimateButton();
-        }
     }
 }

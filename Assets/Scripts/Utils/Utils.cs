@@ -50,7 +50,11 @@ namespace Utilities
         public static void AnimateButton(RectTransform rectTransform, float animationDuration, float scaleMultiplier, Ease animationEase)
         {
             Vector3 originalScale = rectTransform.localScale;
-
+            if (scaleSequence != null)
+            {
+                scaleSequence.Kill();
+                scaleSequence = null;
+            }
             scaleSequence = DOTween.Sequence()
                 .Append(rectTransform.DOScale(originalScale * scaleMultiplier, animationDuration).SetEase(animationEase))
                 .Append(rectTransform.DOScale(originalScale, animationDuration).SetEase(animationEase))
@@ -66,10 +70,16 @@ namespace Utilities
         //Rotate Anim
         public static void StartRotateAnimation(RectTransform targetTransform, float rotationSpeed)
         {
-            Sequence sequence = DOTween.Sequence();
-            sequence.Append(targetTransform.DORotate(new Vector3(0f, 0f, 360f), rotationSpeed, RotateMode.FastBeyond360))
+            if (rotateSequence != null)
+            {
+                rotateSequence.Kill();
+                rotateSequence = null;
+            }
+
+            rotateSequence = DOTween.Sequence();
+            rotateSequence.Append(targetTransform.DORotate(new Vector3(0f, 0f, 360f), rotationSpeed, RotateMode.FastBeyond360))
                 .SetLoops(-1, LoopType.Restart);
-            sequence.Play();
+            rotateSequence.Play();
         }
         public static void StopRotateAnimation(RectTransform rectTransform)
         {

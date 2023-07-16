@@ -9,7 +9,7 @@ using WheelOfFortune.UI.Buttons;
 
 namespace WheelOfFortune.Managers
 {
-    public class WheelManager : Singleton<WheelManager>, IObserver
+    public class WheelManager : MonoBehaviour, IObserver, IListener
     {
         public WheelContainer WheelContainer;
         public GameObject wheelItemPrefab;
@@ -31,26 +31,26 @@ namespace WheelOfFortune.Managers
         private Wheel oldWheel;
         private int spinCount = 0;
         public int SpinCount { get => spinCount; set => spinCount = value; }
-        public Action<Tuple<Sprite, int, bool>> itemObtainedCallback;
-        public Action SpinStartCallback, SpinStoppedCallback;
+        //
+        public EventManager wheelEventManager = new EventManager();
         //Consts
         private const float FullDegreeOfCircle = 360;
         private const string SpriteCloneText = "(Clone)";
-        public override void Awake()
+        private void Awake()
         {
-            base.Awake();
             //Callbacks
-            EventManager<Tuple<Sprite, int, bool>> eventManager = new EventManager<Tuple<Sprite, int, bool>>();
-            eventManager.AddEventListener(itemObtainedCallback,UpdateCurrentWheel);
-            UIManager.Instance.playScreen.ItemCollectedCallback += UpdateCurrentWheel;
-            UIManager.Instance.playScreen.ItemCollectedCallback += UpdateZoneText;
-            UIManager.Instance.playScreen.ItemCollectFailedCallback += ResetCurrentWheel;
+            AddEventListener<Tuple<Sprite, int, bool>>(UpdateCurrentWheel);
+            AddEventListener<Tuple<Sprite, int, bool>>(UpdateZoneText);
+
+            // UIManager.Instance.playScreen.AddEventListener<Tuple<Sprite, int, bool>>(UpdateCurrentWheel);
+            // UIManager.Instance.playScreen.AddEventListener<Tuple<Sprite, int, bool>>(UpdateZoneText);
+            UIManager.Instance.playScreen.AddEventListener<EventArgs>(args => ResetCurrentWheel());
         }
 
         private void Start()
         {
-            SpinStartCallback += SpinButton.Instance.Hide;
-            SpinStoppedCallback += RotateWheel;
+            AddEventListener<bool>(SpinButton.Instance.Show);
+
             SpinButton.Instance.Attach(this);
             //
             SetWheel();
@@ -61,11 +61,13 @@ namespace WheelOfFortune.Managers
         {
             SpinButton.Instance.Detach(this);
             //Callbacks
-            UIManager.Instance.playScreen.ItemCollectedCallback -= UpdateCurrentWheel;
-            UIManager.Instance.playScreen.ItemCollectedCallback -= UpdateZoneText;
-            UIManager.Instance.playScreen.ItemCollectFailedCallback -= ResetCurrentWheel;
-            SpinStartCallback -= SpinButton.Instance.Hide;
-            SpinStoppedCallback -= RotateWheel;
+            // UIManager.Instance.playScreen.RemoveEventListener<Tuple<Sprite, int, bool>>(UpdateCurrentWheel);
+            // UIManager.Instance.playScreen.RemoveEventListener<Tuple<Sprite, int, bool>>(UpdateZoneText);
+            UIManager.Instance.playScreen.RemoveEventListener<EventArgs>(args => ResetCurrentWheel());
+
+            RemoveEventListener<bool>(SpinButton.Instance.Show);
+            RemoveEventListener<Tuple<Sprite, int, bool>>(UpdateCurrentWheel);
+            RemoveEventListener<Tuple<Sprite, int, bool>>(UpdateZoneText);
         }
         //IObserver---
         public void UpdateObserver(IObservable observable)
@@ -86,7 +88,7 @@ namespace WheelOfFortune.Managers
 
         private IEnumerator SpinWheel(float spinTime, GameObject obtainedItemObj, WheelItem obtainedItem)
         {
-            SpinStartCallback?.Invoke();
+            TriggerEvent<bool>(false);
             float itemCount = currentWheel.wheelItemList.Count;
             AnimationCurve spinCurve = currentWheelData.spinCurve;
 
@@ -110,8 +112,9 @@ namespace WheelOfFortune.Managers
             Tuple<Sprite, int, bool> obtaineItemData = SetObtainedData(obtainedItem);
 
             yield return new WaitForSeconds(resultScreenDelay);
-            SpinStoppedCallback?.Invoke();
-            itemObtainedCallback?.Invoke(obtaineItemData);
+            TriggerEvent<bool>(true);
+            TriggerEvent<Tuple<Sprite, int, bool>>(obtaineItemData);
+            RotateWheel();
         }
 
         //Get Obtained Data---------------------------------------------
@@ -166,7 +169,8 @@ namespace WheelOfFortune.Managers
         private void RotateWheel() { Transform _transform = GetCurrentWheelChildTransform(); _transform.localEulerAngles = Vector3.zero; }
         private void UpdateCurrentWheel(Tuple<Sprite, int, bool> tuple)
         {
-            SpinCount++; SetWheel();
+            SpinCount++;
+            SetWheel();
             SetWheelItemObjects();
         }
         public void ResetCurrentWheel()
@@ -266,6 +270,21 @@ namespace WheelOfFortune.Managers
                 container.ItemValue = wheelItem.itemValue;
                 container.UpdateValues(container.ItemValue, container.ImageSprite);
             }
+        }
+        //Events
+        public void AddEventListener<T>(Action<T> eventHandler)
+        {
+            wheelEventManager.AddEventListener<T>(eventHandler);
+        }
+
+        public void RemoveEventListener<T>(Action<T> eventHandler)
+        {
+            wheelEventManager.RemoveEventListener<T>(eventHandler);
+        }
+
+        public void TriggerEvent<T>(T eventHandler)
+        {
+            wheelEventManager.TriggerEvent<T>(eventHandler);
         }
     }
 

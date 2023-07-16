@@ -11,9 +11,9 @@ namespace WheelOfFortune.UI.Screens
     {
         [SerializeField] private OpenButton openButton;
         [SerializeField] private CollectedItemPanel collectedItemPanel;
-        public void InitHomeScreen()
+        public override void InitScreen()
         {
-            Show();
+            base.InitScreen();
             LoadCollectedItemPanel();
         }
         private void Start()
@@ -27,13 +27,13 @@ namespace WheelOfFortune.UI.Screens
         public void UpdateObserver(IObservable observable)
         {
             collectedItemPanel.InitCollectedItemPanel();
-            openButton.Hide();
+            openButton.Show(false);
         }
         private void LoadCollectedItemPanel()
         {
             List<Tuple<int, Sprite>> obtainedItemData = GameManager.Instance.ObtainedItemData;
             collectedItemPanel.LoadObtainedItemPanel(obtainedItemData);
         }
-        public void ShowOpenButton() { openButton.Show(); }
+        public void ShowOpenButton() { openButton.Show(true); }
     }
 }

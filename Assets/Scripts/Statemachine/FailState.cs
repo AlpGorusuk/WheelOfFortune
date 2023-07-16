@@ -14,6 +14,6 @@ public class FailState : State
     }
     public override void Exit()
     {
-        failScreen.Hide();
+        failScreen.Show(false);
     }
 }

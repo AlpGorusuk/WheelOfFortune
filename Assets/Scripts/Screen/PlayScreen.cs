@@ -7,49 +7,23 @@ using WheelOfFortune.UI.Buttons;
 
 namespace WheelOfFortune.UI.Screens
 {
-    public class PlayScreen : BaseScreen, IObserver
+    public class PlayScreen : BaseScreen, IObserver, IListener
     {
-        public Action<Tuple<Sprite, int, bool>> ItemCollectedCallback;
-        public Action ItemCollectFailedCallback;
         private ObtainedItemPanel obtainedItemPanel;
-        private void OnEnable()
+        private WheelManager wheelManager;
+        public EventManager playScreenEventManager = new EventManager();
+        public override void InitScreen()
         {
-            WheelManager.Instance.itemObtainedCallback += InitObtainedWheelItemData;
-            WheelManager.Instance.SpinStartCallback += () =>
-            {
-                CollectButton.Instance.EnableButton(false);
-                SpinButton.Instance.Hide();
-            };
-            WheelManager.Instance.SpinStoppedCallback += () =>
-            {
-                CollectButton.Instance.EnableButton(true);
-                SpinButton.Instance.Show();
-            };
-            ItemCollectedCallback += UIManager.Instance.ChangeStateWin;
-            ItemCollectFailedCallback += UIManager.Instance.ChangeStateFail;
-
-        }
-        private void OnDisable()
-        {
-            WheelManager.Instance.itemObtainedCallback -= InitObtainedWheelItemData;
-            WheelManager.Instance.SpinStartCallback -= () =>
-            {
-                CollectButton.Instance.EnableButton(false);
-                SpinButton.Instance.Hide();
-            };
-            WheelManager.Instance.SpinStoppedCallback -= () =>
-            {
-                CollectButton.Instance.EnableButton(true);
-                SpinButton.Instance.Show();
-            };
-            ItemCollectedCallback -= UIManager.Instance.ChangeStateWin;
-            ItemCollectFailedCallback -= UIManager.Instance.ChangeStateFail;
-        }
-        public new void InitScreen()
-        {
-            Show();
-            AnimateScreen(Vector3.zero, rectTransform.localScale);
+            base.InitScreen();
             obtainedItemPanel = GetComponentInChildren<ObtainedItemPanel>();
+            wheelManager = GetComponentInChildren<WheelManager>();
+            //events
+            AddEventListener<Tuple<Sprite, int, bool>>(UIManager.Instance.ChangeStateWin);
+            AddEventListener<EventArgs>(args => UIManager.Instance.ChangeStateFail());
+
+            wheelManager.AddEventListener<Tuple<Sprite, int, bool>>(InitObtainedWheelItemData);
+            wheelManager.AddEventListener<bool>(SpinButton.Instance.Show);
+            wheelManager.AddEventListener<bool>(CollectButton.Instance.EnableButton);
         }
         private void Start()
         {
@@ -58,13 +32,20 @@ namespace WheelOfFortune.UI.Screens
         private void OnDestroy()
         {
             CollectButton.Instance.Detach(this);
+            //events
+            wheelManager.RemoveEventListener<Tuple<Sprite, int, bool>>(InitObtainedWheelItemData);
+            wheelManager.RemoveEventListener<bool>(SpinButton.Instance.Show);
+            wheelManager.RemoveEventListener<bool>(CollectButton.Instance.EnableButton);
+
+            RemoveEventListener<Tuple<Sprite, int, bool>>(UIManager.Instance.ChangeStateWin);
+            RemoveEventListener<EventArgs>(args => UIManager.Instance.ChangeStateFail());
         }
         public void UpdateObserver(IObservable observable)
         {
             List<Tuple<int, Sprite>> targetItemData = obtainedItemPanel.GetSaveableObtainedItemData();
             GameManager.Instance.SaveGame(targetItemData);
             obtainedItemPanel.ClearObtainedItems();
-            WheelManager.Instance.ResetCurrentWheel();
+            wheelManager.ResetCurrentWheel();
             UIManager.Instance.ChangeStateHome();
         }
         private void InitObtainedWheelItemData(Tuple<Sprite, int, bool> obtainedItem)
@@ -72,12 +53,27 @@ namespace WheelOfFortune.UI.Screens
             bool isFailItem = obtainedItem.Item3;
             if (isFailItem)
             {
-                ItemCollectFailedCallback?.Invoke();
+                TriggerEvent<EventArgs>(EventArgs.Empty);
             }
             else
             {
-                ItemCollectedCallback?.Invoke(obtainedItem);
+                TriggerEvent<Tuple<Sprite, int, bool>>(obtainedItem);
             }
+        }
+        //Events
+        public void AddEventListener<T>(Action<T> eventHandler)
+        {
+            playScreenEventManager.AddEventListener<T>(eventHandler);
+        }
+
+        public void RemoveEventListener<T>(Action<T> eventHandler)
+        {
+            playScreenEventManager.RemoveEventListener<T>(eventHandler);
+        }
+
+        public void TriggerEvent<T>(T eventHandler)
+        {
+            playScreenEventManager.TriggerEvent<T>(eventHandler);
         }
     }
 }

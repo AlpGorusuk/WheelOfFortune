@@ -10,19 +10,26 @@ namespace WheelOfFortune.UI.Screens
         [SerializeField] private WheelItemContainer obtainedWheelItemContainer;
         [SerializeField] private RectTransform effectTransform;
         [SerializeField] private float effectRotataionSpeed;
-        public void InitWinScreen(Tuple<Sprite, int, bool> rewardItem)
+        public void InitScreen(Tuple<Sprite, int, bool> rewardItem)
         {
-            Show();
-            AnimateScreen(Vector3.zero, rectTransform.localScale);
+            Show(true);
+            AnimateScreen(initScale, finalScale);//For Open
             Sprite _sprite = rewardItem.Item1;
             int _valueText = rewardItem.Item2;
             obtainedWheelItemContainer.UpdateValues(_valueText, _sprite);
-            ClaimButton.Instance.Show();
             PlayEffectAnimation();
+            ClaimButton.Instance.Show(true);
+            ClaimButton.Instance.AnimateButton(true);
         }
         private void Start()
         {
             ClaimButton.Instance.Attach(this);
+        }
+        private void OnDestroy()
+        {
+            ClaimButton.Instance.AnimateButton(false);
+            StopEffectAnimation();
+            ClaimButton.Instance.Detach(this);
         }
         private void PlayEffectAnimation()
         {
@@ -32,15 +39,9 @@ namespace WheelOfFortune.UI.Screens
         {
             Utilities.Utils.StopRotateAnimation(effectTransform);
         }
-        private void OnDestroy()
-        {
-            ClaimButton.Instance.Detach(this);
-        }
-
         public void UpdateObserver(IObservable observable)
         {
-            ClaimButton.Instance.Hide();
-            StopEffectAnimation();
+            ClaimButton.Instance.Show(false);
             UIManager.Instance.ChangeStatePlay();
         }
     }

@@ -12,11 +12,11 @@ public class WinState : State
     }
     public override void Enter()
     {
-        winScreen.InitWinScreen(winItem);
+        winScreen.InitScreen(winItem);
     }
     public override void Exit()
     {
-        winScreen.Hide();
+        winScreen.Show(false);
     }
     public void SetWinItem(Tuple<Sprite, int, bool> item) { winItem = item; }
 }

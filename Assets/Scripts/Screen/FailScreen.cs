@@ -6,11 +6,11 @@ namespace WheelOfFortune.UI.Screens
 {
     public class FailScreen : BaseScreen, IObserver
     {
-        public new void InitScreen()
+        public override void InitScreen()
         {
-            Show();
-            AnimateScreen(Vector3.zero, rectTransform.localScale);
-            FailButton.Instance.Show();
+            base.InitScreen();
+            FailButton.Instance.Show(true);
+            FailButton.Instance.AnimateButton(true);
         }
         private void Start()
         {
@@ -19,10 +19,11 @@ namespace WheelOfFortune.UI.Screens
         private void OnDestroy()
         {
             FailButton.Instance.Detach(this);
+            FailButton.Instance.AnimateButton(false);
         }
         public void UpdateObserver(IObservable observable)
         {
-            FailButton.Instance.Hide();
+            FailButton.Instance.Show(false);
             UIManager.Instance.ChangeStatePlay();
         }
     }

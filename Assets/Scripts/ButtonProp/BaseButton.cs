@@ -28,25 +28,33 @@ public abstract class BaseButton : MonoBehaviour, IObservable, IInteractable
             observer.UpdateObserver(this);
         }
     }
-
-    public void Show()
-    {
-        gameObject.SetActive(true);
-    }
-    public void Hide()
+    public void AnimateButton(bool isEnable)
     {
         RectTransform rectTransform = GetComponent<RectTransform>();
-        Utilities.Utils.StopButtonAnimation(rectTransform);
-        gameObject.SetActive(false);
-    }
-    public void AnimateButton()
-    {
-        RectTransform rectTransform = GetComponent<RectTransform>();
-        Utilities.Utils.AnimateButton(rectTransform, animationDuration, scaleMultiplier, animationEase);
+        if (isEnable)
+        {
+            Utilities.Utils.AnimateButton(rectTransform, animationDuration, scaleMultiplier, animationEase);
+        }
+        else
+        {
+            Utilities.Utils.StopButtonAnimation(rectTransform);
+        }
     }
     public void EnableButton(bool isEnable)
     {
         Button _button = GetComponent<Button>();
         _button.enabled = isEnable;
+    }
+
+    public void Show(bool _value)
+    {
+        if (_value == true)
+        {
+            gameObject.SetActive(_value);
+        }
+        else
+        {
+            gameObject.SetActive(_value);
+        }
     }
 }
