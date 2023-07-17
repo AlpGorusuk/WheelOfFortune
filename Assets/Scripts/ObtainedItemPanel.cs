@@ -10,12 +10,12 @@ namespace WheelOfFortune.UI.Panels
         [SerializeField] private GameObject wheelItemPrefab;
         [SerializeField] private Transform wheelItemParent;
         private Dictionary<Sprite, Tuple<int, WheelItemContainer>> obtainedItemDataDictionary = new Dictionary<Sprite, Tuple<int, WheelItemContainer>>();
-        private void OnEnable()
+        private void Start()
         {
             UIManager.Instance.playScreen.AddEventListener<Tuple<Sprite, int, bool>>(UpdateObtainItemDictionary);
             UIManager.Instance.playScreen.AddEventListener<EventArgs>(args => ClearObtainedItems());
         }
-        private void OnDisable()
+        private void OnDestroy()
         {
             UIManager.Instance.playScreen.RemoveEventListener<Tuple<Sprite, int, bool>>(UpdateObtainItemDictionary);
             UIManager.Instance.playScreen.RemoveEventListener<EventArgs>(args => ClearObtainedItems());
@@ -24,7 +24,6 @@ namespace WheelOfFortune.UI.Panels
         {
             Sprite _sprite = obtainedItemData.Item1;
             int itemValue = obtainedItemData.Item2;
-
             bool isItemAlreadyExists = IsItemAlreadyExists(_sprite);
 
             if (!isItemAlreadyExists)
@@ -52,7 +51,7 @@ namespace WheelOfFortune.UI.Panels
                 Tuple<int, WheelItemContainer> data = kvp.Value;
                 saveableDataList.Add(new Tuple<int, Sprite>(data.Item1, sprite));
             }
-
+            ClearObtainedItems();
             return saveableDataList;
         }
         public void ClearObtainedItems()
@@ -74,6 +73,7 @@ namespace WheelOfFortune.UI.Panels
             int _itemValue = obtainedItemData.Item2;
 
             _wheelObject.transform.SetParent(wheelItemParent);
+            _wheelObject.transform.localScale = Vector3.one;
             wheelItemContainer.UpdateValues(_itemValue, _objSprite);
             return wheelItemContainer;
         }

@@ -10,9 +10,12 @@ namespace WheelOfFortune.UI.Screens
         {
             base.InitScreen();
 
-            FailButton.Instance.Attach(this);
             FailButton.Instance.Show(true);
             FailButton.Instance.AnimateButton(true);
+        }
+        private void Start()
+        {
+            FailButton.Instance.Attach(this);
         }
 
         private void OnDisable()

@@ -36,21 +36,13 @@ namespace WheelOfFortune.Managers
         //Consts
         private const float FullDegreeOfCircle = 360;
         private const string SpriteCloneText = "(Clone)";
-        private void Awake()
-        {
-            //Callbacks
-            AddEventListener<Tuple<Sprite, int, bool>>(UpdateCurrentWheel);
-            AddEventListener<Tuple<Sprite, int, bool>>(UpdateZoneText);
-
-            // UIManager.Instance.playScreen.AddEventListener<Tuple<Sprite, int, bool>>(UpdateCurrentWheel);
-            // UIManager.Instance.playScreen.AddEventListener<Tuple<Sprite, int, bool>>(UpdateZoneText);
-            UIManager.Instance.playScreen.AddEventListener<EventArgs>(args => ResetCurrentWheel());
-        }
-
         private void Start()
         {
             AddEventListener<bool>(SpinButton.Instance.Show);
+            AddEventListener<Tuple<Sprite, int, bool>>(UpdateCurrentWheel);
+            AddEventListener<Tuple<Sprite, int, bool>>(UpdateZoneText);
 
+            UIManager.Instance.playScreen.AddEventListener<EventArgs>(args => ResetCurrentWheel());
             SpinButton.Instance.Attach(this);
             //
             SetWheel();
@@ -61,8 +53,6 @@ namespace WheelOfFortune.Managers
         {
             SpinButton.Instance.Detach(this);
             //Callbacks
-            // UIManager.Instance.playScreen.RemoveEventListener<Tuple<Sprite, int, bool>>(UpdateCurrentWheel);
-            // UIManager.Instance.playScreen.RemoveEventListener<Tuple<Sprite, int, bool>>(UpdateZoneText);
             UIManager.Instance.playScreen.RemoveEventListener<EventArgs>(args => ResetCurrentWheel());
 
             RemoveEventListener<bool>(SpinButton.Instance.Show);
@@ -110,7 +100,6 @@ namespace WheelOfFortune.Managers
             }
             //
             Tuple<Sprite, int, bool> obtaineItemData = SetObtainedData(obtainedItem);
-
             yield return new WaitForSeconds(resultScreenDelay);
             TriggerEvent<bool>(true);
             TriggerEvent<Tuple<Sprite, int, bool>>(obtaineItemData);

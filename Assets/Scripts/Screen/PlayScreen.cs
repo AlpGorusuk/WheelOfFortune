@@ -18,16 +18,17 @@ namespace WheelOfFortune.UI.Screens
             obtainedItemPanel = GetComponentInChildren<ObtainedItemPanel>();
             wheelManager = GetComponentInChildren<WheelManager>();
             //events
-            AddEventListener<Tuple<Sprite, int, bool>>(UIManager.Instance.ChangeStateWin);
-            AddEventListener<EventArgs>(args => UIManager.Instance.ChangeStateFail());
 
-            wheelManager.AddEventListener<Tuple<Sprite, int, bool>>(InitObtainedWheelItemData);
-            wheelManager.AddEventListener<bool>(SpinButton.Instance.Show);
-            wheelManager.AddEventListener<bool>(CollectButton.Instance.EnableButton);
         }
         private void Start()
         {
             CollectButton.Instance.Attach(this);
+            wheelManager.AddEventListener<Tuple<Sprite, int, bool>>(InitObtainedWheelItemData);
+            wheelManager.AddEventListener<bool>(SpinButton.Instance.Show);
+            wheelManager.AddEventListener<bool>(CollectButton.Instance.EnableButton);
+            //
+            AddEventListener<Tuple<Sprite, int, bool>>(UIManager.Instance.ChangeStateWin);
+            AddEventListener<EventArgs>(args => UIManager.Instance.ChangeStateFail());
         }
         private void OnDestroy()
         {

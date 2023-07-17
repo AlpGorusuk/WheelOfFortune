@@ -24,13 +24,11 @@ namespace WheelOfFortune.Managers
             string serializedData = PlayerPrefs.GetString(PlayerPrefsKey);
             if (!string.IsNullOrEmpty(serializedData))
             {
-                char[] separator = { ';' };
-                string[] dataStrings = serializedData.Split(separator);
+                string[] dataStrings = serializedData.Split(';');
                 obtainedItemData = new List<Tuple<int, Sprite>>();
                 foreach (string dataString in dataStrings)
                 {
-                    char[] valueSeparator = { ',' };
-                    string[] values = dataString.Split(valueSeparator);
+                    string[] values = dataString.Split(',');
 
                     if (values.Length >= MinimumRequiredValues && int.TryParse(values[0], out int intValue))
                     {
@@ -96,6 +94,7 @@ namespace WheelOfFortune.Managers
         public void SaveGame(List<Tuple<int, Sprite>> targetItemData)
         {
             MergeItemData(obtainedItemData, targetItemData);
+            Debug.Log(obtainedItemData.Count);
             SaveObtainedData();
             Debug.Log("GAME SAVED!");
         }
@@ -107,12 +106,15 @@ namespace WheelOfFortune.Managers
 
                 foreach (Tuple<int, Sprite> obtainedTuple in obtainedItemData)
                 {
-                    if (obtainedTuple.Item2 == targetTuple.Item2) // Sprite'lar aynı ise
+                    Debug.Log("obtainedTuple  :" + obtainedTuple.Item2);
+                    Debug.Log("targetTuple  :" + targetTuple.Item2);
+                    if (obtainedTuple.Item2.name == targetTuple.Item2.name) // Sprite'lar aynı ise
                     {
                         int newCount = obtainedTuple.Item1 + targetTuple.Item1; // Int değerleri birleştir
                         Tuple<int, Sprite> mergedTuple = new Tuple<int, Sprite>(newCount, obtainedTuple.Item2);
                         obtainedItemData.Remove(obtainedTuple); // Eski tuple'ı listeden kaldır
                         obtainedItemData.Add(mergedTuple); // Yeni tuple'ı ekle
+                        Debug.Log("mergedTuple  :" + mergedTuple.Item1);
                         foundMatch = true;
                         break; // İlgili tuple işlendi, döngüden çık
                     }

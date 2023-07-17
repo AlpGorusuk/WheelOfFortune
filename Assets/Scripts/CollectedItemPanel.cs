@@ -67,6 +67,7 @@ namespace WheelOfFortune.UI.Panels
             Sprite _objSprite = obtainedItemData.Item2;
 
             _wheelObject.transform.SetParent(wheelItemParent);
+            _wheelObject.transform.localScale = Vector3.one;
             wheelItemContainer.UpdateValues(_itemValue, _objSprite);
 
             itemData.Add(_wheelObject);

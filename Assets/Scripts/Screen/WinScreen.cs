@@ -20,9 +20,12 @@ namespace WheelOfFortune.UI.Screens
             obtainedWheelItemContainer.UpdateValues(_valueText, _sprite);
             PlayEffectAnimation();
 
-            ClaimButton.Instance.Attach(this);
             ClaimButton.Instance.Show(true);
             ClaimButton.Instance.AnimateButton(true);
+        }
+        private void Start()
+        {
+            ClaimButton.Instance.Attach(this);
         }
         private void OnDestroy()
         {
